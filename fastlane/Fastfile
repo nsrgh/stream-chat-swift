@@ -7,6 +7,42 @@ before_all do
   end
 end
 
+desc "Release a new version of StreamChatClient"
+lane :release do |options|
+  UI.user_error!("Please use type parameter with one of the options: type:patch, type:minor, type:major") unless ["patch", "minor", "major"].include?(options[:type])
+  
+  version_number = increment_version_number(bump_type: options[:type], xcodeproj: "StreamChat.xcodeproj")
+  
+  changes = touch_changelog(release_version: version_number)
+  
+  version_bump_podspec(path: "StreamChatClient.podspec", version_number: version_number)
+  version_bump_podspec(path: "StreamChatCore.podspec", version_number: version_number)
+  version_bump_podspec(path: "StreamChat.podspec", version_number: version_number)
+  
+  sh("bundle exec jazzy --xcodebuild-arguments \"-project\",\"../StreamChat.xcodeproj\",\"-scheme\",\"StreamChatClient\",\"-sdk\",\"iphonesimulator\" --output \"../docs/client\" -a GetStream.io -u getstream.io -g https://github.com/GetStream/stream-chat-swift")
+  sh("bundle exec jazzy --xcodebuild-arguments \"-project\",\"../StreamChat.xcodeproj\",\"-scheme\",\"StreamChatCore\",\"-sdk\",\"iphonesimulator\" --output \"../docs/core\" -a GetStream.io -u getstream.io -g https://github.com/GetStream/stream-chat-swift")
+  sh("bundle exec jazzy --xcodebuild-arguments \"-project\",\"../StreamChat.xcodeproj\",\"-scheme\",\"StreamChat\",\"-sdk\",\"iphonesimulator\" --output \"../docs/ui\" -a GetStream.io -u getstream.io -g https://github.com/GetStream/stream-chat-swift")
+  
+  sh("git add -A")
+  sh("git commit -m 'Bump #{version_number}'")
+  sh("git tag #{version_number}")
+  
+  github_release = set_github_release(
+                     repository_name: "GetStream/stream-chat-swift",
+                     api_token: ENV["GITHUB_TOKEN"],
+                     name: version_number,
+                     tag_name: version_number,
+                     description: changes,
+                     is_draft: true
+                   )
+                   
+  push_to_git_remote(tags: true)
+                   
+  pod_push(path: "StreamChatClient.podspec", allow_warnings: true)
+  pod_push(path: "StreamChatCore.podspec", allow_warnings: true)
+  pod_push(path: "StreamChat.podspec", allow_warnings: true)
+end
+
 desc "Installs all Certs and Profiles necessary for development and ad-hoc"
 lane :match_me do
   match(
