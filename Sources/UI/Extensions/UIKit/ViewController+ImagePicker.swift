@@ -76,25 +76,33 @@ extension ViewController {
         
         switch status {
         case .notDetermined:
-            message = "Permissions are not determined."
+            message = NSLocalizedString("stream_input_library_permission_notdetermined",
+                                        comment: "Permissions are not determined.")
         case .denied:
-            message = "You have explicitly denied this application access to photos data."
+            message = NSLocalizedString("stream_input_library_premission_denied",
+                                        comment: "You have explicitly denied this application access to photos data.")
         case .restricted:
-            message = "This application is not authorized to access photo data."
+            message = NSLocalizedString("stream_input_library_permission_restricted",
+                                        comment: "This application is not authorized to access photo data.")
         default:
             return
         }
         
-        showAlert(title: "Photo Library Permission",
+        showAlert(title: NSLocalizedString("stream_input_library_permission",
+                                           comment: "Photo Library Permission"),
                   message: message,
-                  actions: [.init(title: "Settings",
+                  actions: [.init(title: NSLocalizedString("stream_permission_settings",
+                                                           comment: "Settings"),
                                   style: .default,
                                   handler: { _ in
                                       if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
                                           UIApplication.shared.open(settingsURL)
                                       }
                                   }),
-                            .init(title: "Ok", style: .default, handler: nil)])
+                            .init(title: NSLocalizedString("stream_action_ok",
+                                                           comment: "Ok"),
+                                  style: .default,
+                                  handler: nil)])
     }
 }
 
