@@ -1,0 +1,163 @@
+/* 
+  Localizable.strings
+  StreamChat
+
+  Created by Nikita Korobeinikov on 20/04/2020.
+  Copyright © 2020 Stream.io Inc. All rights reserved.
+*/
+
+/* Notification */
+"stream_default_notification_channel_id" = "stream_GetStreamChat";
+
+/*  */
+"stream_default_notification_channel_name" = "stream_GetStreamChat";
+
+/*  */
+"stream_default_notification_read" = "Mark as read";
+
+/*  */
+"stream_default_notification_reply" = "Reply";
+
+/*  */
+"stream_default_notification_type" = "Type message";
+
+/*  */
+"stream_default_notification_title" = "Chat message";
+
+/*  */
+"stream_default_notification_message" = "You've received new message";
+
+/* Message Date */
+"stream_just_now" = "Just Now";
+
+/*  */
+"stream_today" = "Today";
+
+/*  */
+"stream_yesterday" = "Yesterday";
+
+/*  */
+"stream_message_date" = "%1$@ %2$@";
+
+/* Chat */
+"stream_you" = "(you)";
+
+/* MessageInput */
+"stream_input_hint" = "Write a message";
+
+/*  */
+"stream_input_type_add_file" = "Add a file";
+
+/*  */
+"stream_input_type_edit_message" = "Edit a message";
+
+/*  */
+"stream_input_type_select_gallery" = "Select your photo or video";
+
+/*  */
+"stream_input_type_select_file" = "Select your file";
+
+/*  */
+"stream_input_type_command" = "Commands matching";
+
+/*  */
+"stream_input_type_auto_mention" = "Searching for people";
+
+/*  */
+"stream_input_camera_title" = "Capture Image or Video";
+
+/*  */
+"stream_camera_permission_message" = "needs camera and storage access so that you can take photos and videos. Please enable it in Settings.";
+
+/*  */
+"stream_storage_permission_message" = "needs storage access so that you can send and save photos, videos, music and the other files.\nPlease enable it in Settings.";
+
+/*  */
+"stream_both_permissions_message" = "needs camera and storage access so that you can take, send and save photos, videos music and the other files. Please enable it in Settings.";
+
+/*  */
+"stream_input_upload_media" = "Upload a photo or video";
+
+/*  */
+"stream_input_take_picture" = "Upload from a camera";
+
+/*  */
+"stream_input_upload_file" = "Upload a file";
+
+/* Folder Name */
+"stream_image" = "Images";
+
+/*  */
+"stream_video" = "Video";
+
+/* Message Status */
+"stream_delete_message" = "This message was deleted.";
+
+/*  */
+"stream_message_failed_send" = "MESSAGE FAILED ּ• CLICK TO TRY AGAIN";
+
+/*  */
+"stream_message_failed_send_toast" = "Unable to send message";
+
+/*  */
+"stream_message_failed_edit_toast" = "Unable to edit message";
+
+/*  */
+"stream_message_invalid_command" = "UNSENT ּ• INVALID COMMAND";
+
+/*  */
+"stream_message_invalid_response" = "Response or message is empty.";
+
+/* Thread */
+"stream_thread_separator" = "Start of a new thread";
+
+/* Chat Screen */
+"stream_channel_unknown_title" = "Channel without name";
+
+/*  */
+"stream_channel_offlineText" = "Waiting for network…";
+
+/*  */
+"stream_channel_header_active" = "Active %@";
+
+/*  */
+"stream_channel_header_active_now" = "just now";
+
+/* Error */
+"stream_no_media_error" = "There is no photo or video.";
+
+/*  */
+"stream_large_size_file_error" = "This file is too large to upload. The file size limit is 20MB.";
+
+/*  */
+"stream_attachment_uploading_error" = "Unable to upload attachment.";
+
+/*  */
+"stream_no_file_error" = "There is no file.";
+
+/*  */
+"stream_take_photo_failed" = "Failed due to an unknown error.";
+
+/* Last Message Type */
+"stream_last_message_attachment_photo" = "photo";
+
+/*  */
+"stream_last_message_attachment_video" = "video";
+
+/* Attachment View */
+"stream_attachment_load_failed_unknown" = "The load failed due to an unknown error.";
+
+/*  */
+"stream_attachment_invalid_url" = "The load failed due to the invalid url.";
+
+/*  */
+"stream_attachment_invalid_mime_type" = "Something went wrong. Unable to open attachment: %@";
+
+/* Giphy send view */
+"stream_giphy_send" = "Send";
+
+/*  */
+"stream_giphy_shuffle" = "Shuffle";
+
+/*  */
+"stream_giphy_cancel" = "Cancel";

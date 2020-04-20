@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6D9454A0244DC3ED004E723A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D9454A2244DC3ED004E723A /* Localizable.strings */; };
+		6D9454A4244DC43A004E723A /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 6D9454A3244DC43A004E723A /* Localizable.stringsdict */; };
 		7900717F2440850700E5246F /* QueryEncodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7900717D244084E200E5246F /* QueryEncodingTests.swift */; };
 		794BDE4A2434BD7400BFBA1F /* NestableCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794BDE492434BD7400BFBA1F /* NestableCodingKey.swift */; };
 		79A9E4F72449D3AF00599B95 /* Data+Gzip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A9E4F62449D3AF00599B95 /* Data+Gzip.swift */; };
@@ -282,6 +284,8 @@
 
 /* Begin PBXFileReference section */
 		465D64C1231808A2006BAE42 /* AttachmentTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentTypeTests.swift; sourceTree = "<group>"; };
+		6D9454A1244DC3ED004E723A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6D9454A3244DC43A004E723A /* Localizable.stringsdict */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; path = Localizable.stringsdict; sourceTree = "<group>"; };
 		7900717D244084E200E5246F /* QueryEncodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryEncodingTests.swift; sourceTree = "<group>"; };
 		794BDE492434BD7400BFBA1F /* NestableCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NestableCodingKey.swift; sourceTree = "<group>"; };
 		795FCD1B23EB155000990F15 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
@@ -958,6 +962,8 @@
 				8ACC7CD1241924BE000750E4 /* Banners */,
 				8ACC7CD4241924BE000750E4 /* Extensions */,
 				8ACC2B61242B8B8600EF509D /* Chat.xcassets */,
+				6D9454A2244DC3ED004E723A /* Localizable.strings */,
+				6D9454A3244DC43A004E723A /* Localizable.stringsdict */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1472,6 +1478,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D9454A0244DC3ED004E723A /* Localizable.strings in Resources */,
+				6D9454A4244DC43A004E723A /* Localizable.stringsdict in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1799,6 +1807,17 @@
 			targetProxy = 8ACB0EA023EB13CE0066343A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		6D9454A2244DC3ED004E723A /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6D9454A1244DC3ED004E723A /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		8A50696123CDEA31009F127A /* Debug */ = {
