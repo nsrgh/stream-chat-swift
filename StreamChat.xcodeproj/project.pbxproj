@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6D9454A0244DC3ED004E723A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D9454A2244DC3ED004E723A /* Localizable.strings */; };
-		6D9454A4244DC43A004E723A /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 6D9454A3244DC43A004E723A /* Localizable.stringsdict */; };
+		6D9454A8244DC8F5004E723A /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 6D9454A3244DC43A004E723A /* Localizable.stringsdict */; };
+		6D9454A9244DC8FA004E723A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D9454A2244DC3ED004E723A /* Localizable.strings */; };
 		7900717F2440850700E5246F /* QueryEncodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7900717D244084E200E5246F /* QueryEncodingTests.swift */; };
 		794BDE4A2434BD7400BFBA1F /* NestableCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794BDE492434BD7400BFBA1F /* NestableCodingKey.swift */; };
 		79A9E4F72449D3AF00599B95 /* Data+Gzip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A9E4F62449D3AF00599B95 /* Data+Gzip.swift */; };
@@ -1478,8 +1478,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6D9454A0244DC3ED004E723A /* Localizable.strings in Resources */,
-				6D9454A4244DC43A004E723A /* Localizable.stringsdict in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1509,6 +1507,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8ACC2B62242B8B8600EF509D /* Chat.xcassets in Resources */,
+				6D9454A9244DC8FA004E723A /* Localizable.strings in Resources */,
+				6D9454A8244DC8F5004E723A /* Localizable.stringsdict in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

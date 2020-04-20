@@ -23,13 +23,15 @@ extension ChatViewController {
         
         guard InternetConnection.shared.isAvailable else {
             footerView.isHidden = false
-            footerView.textLabel.text = "Waiting for network..."
+            footerView.textLabel.text = NSLocalizedString("stream_channel_waiting_network",
+                                                          comment: "Waiting for network...")
             return
         }
         
         guard Client.shared.isConnected else {
             footerView.isHidden = false
-            footerView.textLabel.text = "Connecting..."
+            footerView.textLabel.text = NSLocalizedString("stream_channel_connecting",
+                                                          comment: "Connecting...")
             footerView.activityIndicatorView.startAnimating()
             return
         }

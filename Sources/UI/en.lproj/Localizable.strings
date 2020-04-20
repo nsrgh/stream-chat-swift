@@ -90,6 +90,18 @@
 /*  */
 "stream_video" = "Video";
 
+/* Channel status */
+"stream_channel_delete_message" = "Message was deleted";
+
+/*  */
+"stream_channel_no_messages" = "No messages"
+
+/*  */
+"stream_channel_connecting" = "Connecting...";
+
+/*  */
+"stream_channel_waiting_network" = "Waiting for network...";
+
 /* Message Status */
 "stream_delete_message" = "This message was deleted.";
 
@@ -109,6 +121,9 @@
 "stream_message_invalid_response" = "Response or message is empty.";
 
 /* Thread */
+"stream_thread" = "Thread";
+
+/*  */
 "stream_thread_separator" = "Start of a new thread";
 
 /* Chat Screen */
@@ -145,6 +160,9 @@
 "stream_last_message_attachment_video" = "video";
 
 /* Attachment View */
+"stream_attachment_big_size" = "File size exceeds limit of 20MB";
+
+/*  */
 "stream_attachment_load_failed_unknown" = "The load failed due to an unknown error.";
 
 /*  */
@@ -161,3 +179,66 @@
 
 /*  */
 "stream_giphy_cancel" = "Cancel";
+
+/* Actions */
+"stream_action_cancel" = "Cancel";
+
+/*  */
+"stream_action_delete" = "Delete";
+
+/*  */
+"stream_action_edit_message" = "Edit message";
+
+/*  */
+"stream_action_commands" = "Commands";
+
+/* Message actions */
+"stream_message_action_delete_confirm" = "Delete message?";
+
+/*  */
+"stream_message_action_reactions" = "Reactions";
+
+/*  */
+"stream_message_action_reply" = "Reply";
+
+/*  */
+"stream_message_action_edit" = "Edit";
+
+/*  */
+"stream_message_action_copy" = "Copy";
+
+/*  */
+"stream_message_action_mute" = "Mute";
+
+/*  */
+"stream_message_action_unmute" = "Unmute";
+
+/*  */
+"stream_message_action_unflag" = "Unflag the message";
+
+/*  */
+"stream_message_action_flag" = "Flag the message";
+
+/* User actions */
+"stream_user_action_unflag" = "Unflag the user";
+
+/*  */
+"stream_user_action_flag" = "Flag the user";
+
+/*  */
+"stream_user_action_ban" = "Ban";
+
+/* Banner messages */
+"stream_banner_message_muted" = "%@ was muted";
+
+/*  */
+"stream_banner_message_unmuted" = "%@ was unmuted";
+
+/*  */
+"stream_banner_message_flagged" = "🚩 Flagged: %@";
+
+/*  */
+"stream_banner_message_unflagged" = "🚩 Unflagged: %@";
+
+/*  */
+"stream_banner_message_banned" = "🙅‍♀️ Ban: %@";

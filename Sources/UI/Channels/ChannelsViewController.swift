@@ -179,7 +179,10 @@ open class ChannelsViewController: ViewController {
                                baseColor: style.channel.backgroundColor)
         
         if let lastMessage = channelPresenter.lastMessage {
-            var text = lastMessage.isDeleted ? "Message was deleted" : lastMessage.textOrArgs
+            var text = lastMessage.isDeleted
+                ? NSLocalizedString("stream_channel_delete_message",
+                                    comment: "Message was deleted")
+                : lastMessage.textOrArgs
             
             if text.isEmpty, let first = lastMessage.attachments.first {
                 text = first.title.isEmpty ? ((first.url ?? first.imageURL)?.lastPathComponent) ?? "" : first.title
@@ -191,7 +194,10 @@ open class ChannelsViewController: ViewController {
             cell.update(date: lastMessage.updated)
             
         } else {
-            cell.update(message: "No messages", isMeta: true, isUnread: false)
+            cell.update(message: NSLocalizedString("stream_channel_no_messages",
+                                                   comment: "No messages"),
+                        isMeta: true,
+                        isUnread: false)
         }
     }
     
