@@ -90,6 +90,9 @@
 /*  */
 "stream_channel_connecting" = "Connecting...";
 
+/*  */
+"stream_channel_loading" = "Loading...";
+
 /* Message Status */
 "stream_delete_message" = "This message was deleted.";
 

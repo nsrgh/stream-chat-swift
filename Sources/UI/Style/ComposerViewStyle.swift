@@ -62,7 +62,8 @@ public struct ComposerViewStyle {
     ///   - states: composer states (see `States`).
     public init(font: UIFont = .chatRegular,
                 textColor: UIColor = .black,
-                placeholderText: String = "Write a message",
+                placeholderText: String = NSLocalizedString("stream_input_hint",
+                                                            comment: "Write a message"),
                 placeholderTextColor: UIColor = .chatGray,
                 backgroundColor: UIColor = .clear,
                 helperContainerBackgroundColor: UIColor = .white,

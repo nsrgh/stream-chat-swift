@@ -169,7 +169,8 @@ extension ChatViewController {
         }
         
         if messageActions.contains(.delete), message.canDelete {
-            alert.addAction(.init(title: NSLocalizedString("stream_action_delete", comment: "Delete"),
+            alert.addAction(.init(title: NSLocalizedString("stream_action_delete",
+                                                           comment: "Delete"),
                                   style: .destructive,
                                   handler: { [weak self] _ in
                 self?.conformDeleting(message: message)
@@ -180,7 +181,8 @@ extension ChatViewController {
             return nil
         }
         
-        alert.addAction(.init(title: NSLocalizedString("stream_action_cancel", comment: "Cancel"),
+        alert.addAction(.init(title: NSLocalizedString("stream_action_cancel",
+                                                       comment: "Cancel"),
                               style: .cancel,
                               handler: { _ in }))
         

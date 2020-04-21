@@ -247,7 +247,8 @@ extension ChatViewController {
 extension ChatViewController {
     
     func createComposerCommandsContainerView() -> ComposerHelperContainerView {
-        let container = createComposerHelperContainerView(title: NSLocalizedString("stream_action_commands", comment: "Commands"),
+        let container = createComposerHelperContainerView(title: NSLocalizedString("stream_action_commands",
+                                                                                   comment: "Commands"),
                                                           closeButtonIsHidden: true)
         container.isEnabled = !(presenter?.channel.config.commands.isEmpty ?? true)
         

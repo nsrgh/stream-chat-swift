@@ -46,7 +46,10 @@ open class ViewController: UIViewController {
     
     open func showAlert(title: String?,
                         message: String?,
-                        actions: [UIAlertAction] = [.init(title: "Ok", style: .default, handler: nil)]) {
+                        actions: [UIAlertAction] = [.init(title: NSLocalizedString("stream_action_ok",
+                                                                                   comment: "Ok"),
+                                                          style: .default,
+                                                          handler: nil)]) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         actions.forEach(alert.addAction)
         present(alert, animated: true)
