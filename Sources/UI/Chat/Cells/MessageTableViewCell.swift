@@ -155,7 +155,15 @@ open class MessageTableViewCell: UITableViewCell, Reusable {
         didSet { bottomPaddingView.isHidden = paddingType == .small }
     }
     
-    override public func prepareForReuse() {
+    var isContinueMessage = false
+    
+    override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if let messageBackgroundImage = messageBackgroundImage() {
+            messageContainerView.image = messageBackgroundImage
+        }
+    }
+    
+    override open func prepareForReuse() {
         reset()
         super.prepareForReuse()
     }

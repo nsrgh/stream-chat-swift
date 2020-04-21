@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Message preparation callback on `ChannelPresenter` to modify messages before they're sent [#142](https://github.com/GetStream/stream-chat-swift/issues/142).
 - Better errors when developers forget to call `set(user:)` or don't wait for its completion [#160](https://github.com/GetStream/stream-chat-swift/issues/160).
 - Examples for a channel unread count and watcher count in the Example app [#172](https://github.com/GetStream/stream-chat-swift/issues/172).
+- Added `ChatViewStyle.default`. 
+- Added `ChatViewStyle.dynamic` for iOS 13 to support dynamic colors for dark mode.
+- Added `MessageViewStyle.pointedCornerRadius` to make pointed corner rounded.
 
 ### 🐞 Fixed
 - SPM support [#156](https://github.com/GetStream/stream-chat-swift/issues/156).
@@ -29,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unnecessary `Reachability` dependency removed [#184](https://github.com/GetStream/stream-chat-swift/pull/184).
 - Flag message/user [#186](https://github.com/GetStream/stream-chat-swift/pull/186).
 - Discard messages from muted users [#186](https://github.com/GetStream/stream-chat-swift/pull/186).
+- Open `prepareForReuse()` in `ChannelTableViewCell` and `MessageTableViewCell` [#190](https://github.com/GetStream/stream-chat-swift/pull/190).
 
 # [2.0.1](https://github.com/GetStream/stream-chat-swift/releases/tag/2.0.1)
 _April 3, 2020_
