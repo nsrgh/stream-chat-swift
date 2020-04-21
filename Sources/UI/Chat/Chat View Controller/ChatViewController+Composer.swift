@@ -474,7 +474,7 @@ extension ChatViewController {
             if let resources = try? pickedImage?.fileURL?.resourceValues(forKeys: [.fileSizeKey]),
                let fileSize = resources.fileSize,
                fileSize >= 20 * 1_048_576 { // 20 MB Upload limit
-                self.show(errorMessage: NSLocalizedString("stream_attachment_big_size",
+                self.show(errorMessage: NSLocalizedString("stream_large_size_file_error",
                                                           comment: "File size exceeds limit of 20MB"))
                 return
             }
