@@ -1,0 +1,128 @@
+/* 
+  Localizable.strings
+  StreamChat
+
+  Created by Nikita Korobeinikov on 20/04/2020.
+  Copyright © 2020 Stream.io Inc. All rights reserved.
+*/
+
+
+/* MessageInput */
+"stream_input_hint" = "Write a message";
+
+/*  */
+"stream_input_type_add_file" = "Add a file";
+
+/*  */
+"stream_input_library_permission" = "Photo Library Permission";
+
+/*  */
+"stream_input_library_permission_notdetermined" = "Permissions are not determined.";
+
+/*  */
+"stream_input_library_premission_denied" = "You have explicitly denied this application access to photos data.";
+
+/*  */
+"stream_input_library_permission_restricted" = "This application is not authorized to access photo data.";
+
+/*  */
+"stream_permission_settings" = "Settings";
+
+/*  */
+"stream_input_upload_media" = "Upload a photo or video";
+
+/*  */
+"stream_input_take_picture" = "Upload from a camera";
+
+/*  */
+"stream_input_upload_file" = "Upload a file";
+
+/* Channel status */
+"stream_channel_delete_message" = "Message was deleted";
+
+/*  */
+"stream_channel_no_messages" = "No messages"
+
+/*  */
+"stream_channel_connecting" = "Connecting...";
+
+/*  */
+"stream_channel_loading" = "Loading...";
+
+/* Message Status */
+"stream_delete_message" = "This message was deleted.";
+
+/* Thread */
+"stream_thread" = "Thread";
+
+/* Chat Screen */
+"stream_channel_offlineText" = "Waiting for network…";
+
+/* Error */
+"stream_large_size_file_error" = "This file is too large to upload. The file size limit is 20MB.";
+
+/* Actions */
+"stream_action_cancel" = "Cancel";
+
+/*  */
+"stream_action_ok" = "Ok";
+
+/*  */
+"stream_action_delete" = "Delete";
+
+/*  */
+"stream_action_edit_message" = "Edit message";
+
+/*  */
+"stream_action_commands" = "Commands";
+
+/* Message actions */
+"stream_message_action_delete_confirm" = "Delete message?";
+
+/*  */
+"stream_message_action_reactions" = "Reactions";
+
+/*  */
+"stream_message_action_reply" = "Reply";
+
+/*  */
+"stream_message_action_edit" = "Edit";
+
+/*  */
+"stream_message_action_copy" = "Copy";
+
+/*  */
+"stream_message_action_mute" = "Mute";
+
+/*  */
+"stream_message_action_unmute" = "Unmute";
+
+/*  */
+"stream_message_action_unflag" = "Unflag the message";
+
+/*  */
+"stream_message_action_flag" = "Flag the message";
+
+/* User actions */
+"stream_user_action_unflag" = "Unflag the user";
+
+/*  */
+"stream_user_action_flag" = "Flag the user";
+
+/*  */
+"stream_user_action_ban" = "Ban";
+
+/* Banner messages */
+"stream_banner_message_muted" = "%@ was muted";
+
+/*  */
+"stream_banner_message_unmuted" = "%@ was unmuted";
+
+/*  */
+"stream_banner_message_flagged" = "🚩 Flagged: %@";
+
+/*  */
+"stream_banner_message_unflagged" = "🚩 Unflagged: %@";
+
+/*  */
+"stream_banner_message_banned" = "🙅‍♀️ Ban: %@";
