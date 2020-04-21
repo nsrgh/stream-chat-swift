@@ -1,0 +1,29 @@
+/* 
+  Localizable.strings
+  StreamChat
+
+  Created by Nikita Korobeinikov on 21/04/2020.
+  Copyright © 2020 Stream.io Inc. All rights reserved.
+*/
+
+/* Separator */
+/*  */
+"stream_thread_separator" = "Start of thread";
+
+/*  */
+"stream_today" = "Today";
+
+/*  */
+"stream_yesterday" = "Yesterday";
+
+/*  */
+"stream_message_date" = "at %@";
+
+/* Typing status */
+"stream_typing_status_one" = "%@ is typing...";
+
+/*  */
+"stream_typing_status_two" = "%1$@ and %2$@ are typing...";
+
+/*  */
+"stream_typing_status_many" = "%1$@ and %2$d others are typing...";

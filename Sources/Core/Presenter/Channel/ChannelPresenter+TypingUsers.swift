@@ -20,11 +20,19 @@ extension ChannelPresenter {
         }
         
         if typingUsers.count == 1, let typingUser = typingUsers.first {
-            return "\(typingUser.user.name) is typing..."
+            return String(format: NSLocalizedString("stream_typing_status_one",
+                                                    comment: "%@ is typing..."),
+                          typingUser.user.name)
         } else if typingUsers.count == 2 {
-            return "\(typingUsers[0].user.name) and \(typingUsers[1].user.name) are typing..."
+            return String(format: NSLocalizedString("stream_typing_status_two",
+                                                    comment: "%@ and %@ are typing..."),
+                          typingUsers[0].user.name,
+                          typingUsers[1].user.name)
         } else if let typingUser = typingUsers.first {
-            return "\(typingUser.user.name) and \(String(typingUsers.count - 1)) others are typing..."
+            return String(format: NSLocalizedString("stream_typing_status_many",
+                                                    comment: "%@ and %d others are typing"),
+                          typingUser.user.name,
+                          typingUsers.count - 1)
         }
         
         return nil

@@ -30,15 +30,6 @@
 /* Message Date */
 "stream_just_now" = "Just Now";
 
-/*  */
-"stream_today" = "Today";
-
-/*  */
-"stream_yesterday" = "Yesterday";
-
-/*  */
-"stream_message_date" = "%1$@ %2$@";
-
 /* Chat */
 "stream_you" = "(you)";
 
@@ -122,9 +113,6 @@
 
 /* Thread */
 "stream_thread" = "Thread";
-
-/*  */
-"stream_thread_separator" = "Start of a new thread";
 
 /* Chat Screen */
 "stream_channel_unknown_title" = "Channel without name";

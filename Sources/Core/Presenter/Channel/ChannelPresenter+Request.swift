@@ -61,7 +61,11 @@ extension ChannelPresenter {
         
         if items.isEmpty {
             items.append(.message(parentMessage, []))
-            items.append(.status("Start of thread", nil, false))
+            
+            items.append(.status(NSLocalizedString("stream_thread_separator",
+                                                   comment: "Start of thread"),
+                                 nil,
+                                 false))
         }
         
         if let loadingIndex = items.firstIndexWhereStatusLoading() {
@@ -97,8 +101,11 @@ extension ChannelPresenter {
             
             if showStatuses, !yesterdayStatusAdded, message.created.isYesterday {
                 yesterdayStatusAdded = true
+               
                 items.insert(.status(PresenterItem.statusYesterdayTitle,
-                                     "at \(DateFormatter.time.string(from: message.created))",
+                                     String(format: NSLocalizedString("stream_message_date",
+                                                                      comment: "at %@"),
+                                            DateFormatter.time.string(from: message.created)),
                     false), at: index)
                 index += 1
             }
@@ -106,7 +113,9 @@ extension ChannelPresenter {
             if showStatuses, !todayStatusAdded, message.created.isToday {
                 todayStatusAdded = true
                 items.insert(.status(PresenterItem.statusTodayTitle,
-                                     "at \(DateFormatter.time.string(from: message.created))",
+                                     String(format: NSLocalizedString("stream_message_date",
+                                                                      comment: "at %@"),
+                                            DateFormatter.time.string(from: message.created)),
                     false), at: index)
                 index += 1
             }
