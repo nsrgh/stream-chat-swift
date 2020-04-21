@@ -6,7 +6,6 @@
   Copyright © 2020 Stream.io Inc. All rights reserved.
 */
 
-
 /* MessageInput */
 "stream_input_hint" = "Write a message";
 
@@ -41,7 +40,7 @@
 "stream_channel_delete_message" = "Message was deleted";
 
 /*  */
-"stream_channel_no_messages" = "No messages"
+"stream_channel_no_messages" = "No messages";
 
 /*  */
 "stream_channel_connecting" = "Connecting...";
