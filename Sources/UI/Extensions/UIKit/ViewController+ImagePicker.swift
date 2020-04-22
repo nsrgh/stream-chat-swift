@@ -76,31 +76,25 @@ extension ViewController {
         
         switch status {
         case .notDetermined:
-            message = NSLocalizedString("stream_input_library_permission_notdetermined",
-                                        comment: "Permissions are not determined.")
+            message = .localized(key: "stream_input_library_permission_notdetermined")
         case .denied:
-            message = NSLocalizedString("stream_input_library_premission_denied",
-                                        comment: "You have explicitly denied this application access to photos data.")
+            message = .localized(key: "stream_input_library_premission_denied")
         case .restricted:
-            message = NSLocalizedString("stream_input_library_permission_restricted",
-                                        comment: "This application is not authorized to access photo data.")
+            message = .localized(key: "stream_input_library_permission_restricted")
         default:
             return
         }
         
-        showAlert(title: NSLocalizedString("stream_input_library_permission",
-                                           comment: "Photo Library Permission"),
+        showAlert(title: .localized(key: "stream_input_library_permission"),
                   message: message,
-                  actions: [.init(title: NSLocalizedString("stream_permission_settings",
-                                                           comment: "Settings"),
+                  actions: [.init(title: .localized(key: "stream_permission_settings"),
                                   style: .default,
                                   handler: { _ in
                                       if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
                                           UIApplication.shared.open(settingsURL)
                                       }
                                   }),
-                            .init(title: NSLocalizedString("stream_action_ok",
-                                                           comment: "Ok"),
+                            .init(title: .localized(key: "stream_action_ok"),
                                   style: .default,
                                   handler: nil)])
     }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6D3CAF442450157400A0D12D /* String+Localize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D3CAF42245012F600A0D12D /* String+Localize.swift */; };
+		6D3CAF47245015DA00A0D12D /* String+Localize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D3CAF45245015D800A0D12D /* String+Localize.swift */; };
 		6D9454A9244DC8FA004E723A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D9454A2244DC3ED004E723A /* Localizable.strings */; };
 		6D9E8CAE244F06E50069BB40 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D9E8CB0244F06E50069BB40 /* Localizable.strings */; };
 		6D9E8CB1244F07200069BB40 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 6D9E8CB3244F07200069BB40 /* Localizable.stringsdict */; };
@@ -286,6 +288,8 @@
 
 /* Begin PBXFileReference section */
 		465D64C1231808A2006BAE42 /* AttachmentTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentTypeTests.swift; sourceTree = "<group>"; };
+		6D3CAF42245012F600A0D12D /* String+Localize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localize.swift"; sourceTree = "<group>"; };
+		6D3CAF45245015D800A0D12D /* String+Localize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localize.swift"; sourceTree = "<group>"; };
 		6D9454A1244DC3ED004E723A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6D9E8CAF244F06E50069BB40 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6D9E8CB2244F07200069BB40 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
@@ -901,6 +905,7 @@
 				8ACC7C50241924B5000750E4 /* URL+Media.swift */,
 				8ACC7C53241924B5000750E4 /* Date+Extensions.swift */,
 				8ACC7C52241924B5000750E4 /* Tests.swift */,
+				6D3CAF42245012F600A0D12D /* String+Localize.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1098,6 +1103,7 @@
 				8ACC7CF5241924BE000750E4 /* String */,
 				8ACC7CF8241924BE000750E4 /* Keyboard.swift */,
 				8ACC7CF9241924BE000750E4 /* Rx */,
+				6D3CAF45245015D800A0D12D /* String+Localize.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1683,6 +1689,7 @@
 				8ACC7D12241924BE000750E4 /* UploaderItem+UIImagePickerController.swift in Sources */,
 				8ACC7D34241924BE000750E4 /* UIView+Extensions.swift in Sources */,
 				8ACC7D19241924BE000750E4 /* ChatViewController+TableFooterView.swift in Sources */,
+				6D3CAF47245015DA00A0D12D /* String+Localize.swift in Sources */,
 				8ACC7D05241924BE000750E4 /* ViewController.swift in Sources */,
 				8ACC7D15241924BE000750E4 /* ComposerHelperContainerView.swift in Sources */,
 				8ACC7D0F241924BE000750E4 /* ComposerView+TextView.swift in Sources */,
@@ -1791,6 +1798,7 @@
 				8ACC7C9A241924B5000750E4 /* Client+RxUser.swift in Sources */,
 				8ACC7C8B241924B5000750E4 /* InternetConnection+Rx.swift in Sources */,
 				8ACC7C7D241924B5000750E4 /* Presenter+Rx.swift in Sources */,
+				6D3CAF442450157400A0D12D /* String+Localize.swift in Sources */,
 				8ACC7C7B241924B5000750E4 /* PresenterItem.swift in Sources */,
 				8ACC7C90241924B5000750E4 /* Client+RxChannel.swift in Sources */,
 				8ACC7C88241924B5000750E4 /* RxFunctions.swift in Sources */,

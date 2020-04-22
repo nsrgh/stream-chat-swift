@@ -220,8 +220,7 @@ extension ChatViewController {
 
 extension ChatViewController {
     func createComposerEditingContainerView() -> ComposerHelperContainerView {
-        let container = createComposerHelperContainerView(title: NSLocalizedString("stream_action_edit_message",
-                                                                                   comment: "Edit message"))
+        let container = createComposerHelperContainerView(title: .localized(key: "stream_action_edit_message"))
         
         container.closeButton.rx.tap
             .subscribe(onNext: { [weak self] _ in
@@ -247,8 +246,7 @@ extension ChatViewController {
 extension ChatViewController {
     
     func createComposerCommandsContainerView() -> ComposerHelperContainerView {
-        let container = createComposerHelperContainerView(title: NSLocalizedString("stream_action_commands",
-                                                                                   comment: "Commands"),
+        let container = createComposerHelperContainerView(title: .localized(key: "stream_action_commands"),
                                                           closeButtonIsHidden: true)
         container.isEnabled = !(presenter?.channel.config.commands.isEmpty ?? true)
         
@@ -356,8 +354,7 @@ extension ChatViewController {
                     UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
                     addButtonToAddFileView(container,
                                            icon: UIImage.Icons.images,
-                                           title: NSLocalizedString("stream_input_upload_media",
-                                                                    comment: "Upload a photo or video"),
+                                           title: .localized(key: "stream_input_upload_media"),
                                            sourceType: .photo(.savedPhotosAlbum)) { [weak self] in
                                             self?.showImagePicker(composerAddFileViewSourceType: $0)
                     }
@@ -371,8 +368,7 @@ extension ChatViewController {
                     UIImagePickerController.isSourceTypeAvailable(.camera) {
                     addButtonToAddFileView(container,
                                            icon: UIImage.Icons.camera,
-                                           title: NSLocalizedString("stream_input_take_picture",
-                                                                    comment: "Upload from a camera"),
+                                           title: .localized(key: "stream_input_take_picture"),
                                            sourceType: .photo(.camera)) { [weak self] in
                                             self?.showImagePicker(composerAddFileViewSourceType: $0)
                     }
@@ -380,8 +376,7 @@ extension ChatViewController {
             case .file:
                 addButtonToAddFileView(container,
                                        icon: UIImage.Icons.file,
-                                       title: NSLocalizedString("stream_input_upload_file",
-                                                                comment: "Upload a file"),
+                                       title: .localized(key: "stream_input_upload_file"),
                                        sourceType: .file) { [weak self] _ in
                                         self?.showDocumentPicker()
                 }
@@ -475,8 +470,7 @@ extension ChatViewController {
             if let resources = try? pickedImage?.fileURL?.resourceValues(forKeys: [.fileSizeKey]),
                let fileSize = resources.fileSize,
                fileSize >= 20 * 1_048_576 { // 20 MB Upload limit
-                self.show(errorMessage: NSLocalizedString("stream_large_size_file_error",
-                                                          comment: "File size exceeds limit of 20MB"))
+                self.show(errorMessage: .localized(key: "stream_large_size_file_error"))
                 return
             }
             

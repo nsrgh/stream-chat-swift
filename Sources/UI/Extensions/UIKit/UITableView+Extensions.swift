@@ -48,8 +48,7 @@ extension UITableView {
 
 extension UITableView {
     /// A loading cell title.
-    public static var loadingTitle = NSLocalizedString("stream_channel_loading",
-                                                       comment: "Loading...")
+    public static var loadingTitle: String = .localized(key: "stream_channel_loading")
     
     /// A default loading table view cell.
     ///

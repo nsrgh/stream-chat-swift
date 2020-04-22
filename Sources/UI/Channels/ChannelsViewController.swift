@@ -180,8 +180,7 @@ open class ChannelsViewController: ViewController {
         
         if let lastMessage = channelPresenter.lastMessage {
             var text = lastMessage.isDeleted
-                ? NSLocalizedString("stream_channel_delete_message",
-                                    comment: "Message was deleted")
+                ? .localized(key: "stream_channel_delete_message")
                 : lastMessage.textOrArgs
             
             if text.isEmpty, let first = lastMessage.attachments.first {
@@ -194,8 +193,7 @@ open class ChannelsViewController: ViewController {
             cell.update(date: lastMessage.updated)
             
         } else {
-            cell.update(message: NSLocalizedString("stream_channel_no_messages",
-                                                   comment: "No messages"),
+            cell.update(message: .localized(key: "stream_channel_no_messages"),
                         isMeta: true,
                         isUnread: false)
         }

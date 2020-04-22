@@ -44,12 +44,11 @@ open class ViewController: UIViewController {
         Banners.shared.show(error: error)
     }
     
-    open func showAlert(title: String?,
-                        message: String?,
-                        actions: [UIAlertAction] = [.init(title: NSLocalizedString("stream_action_ok",
-                                                                                   comment: "Ok"),
-                                                          style: .default,
-                                                          handler: nil)]) {
+    func showAlert(title: String?,
+                   message: String?,
+                   actions: [UIAlertAction] = [.init(title: .localized(key: "stream_action_ok"),
+                                                     style: .default,
+                                                     handler: nil)]) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         actions.forEach(alert.addAction)
         present(alert, animated: true)

@@ -12,9 +12,9 @@ import StreamChatClient
 /// A chat item type for view elements.
 public enum PresenterItem: Equatable {
     /// A title for the yesterday separator.
-    public static var statusYesterdayTitle = NSLocalizedString("stream_yesterday", comment: "Yesterday")
+    public static var statusYesterdayTitle: String = .localized(key: "stream_yesterday")
     /// A title for the today separator.
-    public static var statusTodayTitle = NSLocalizedString("stream_today", comment: "Today")
+    public static var statusTodayTitle: String = .localized(key: "stream_today")
     
     /// A loading item.
     case loading(_ inProgress: Bool)

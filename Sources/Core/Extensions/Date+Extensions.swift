@@ -23,7 +23,7 @@ extension Date {
 
 extension Date {
     /// A yesterday title for a status separartor.
-    public static var yesterday = NSLocalizedString("stream_yesterday", comment: "Yesterday")
+    public static var yesterday: String = .localized(key: "stream_yesterday")
     /// A words separator for day and time.
     public static var wordsSeparator = ", "
     

@@ -73,8 +73,7 @@ open class ChatViewController: ViewController, UITableViewDataSource, UITableVie
     
     private(set) lazy var composerEditingContainerView = createComposerEditingContainerView()
     private(set) lazy var composerCommandsContainerView = createComposerCommandsContainerView()
-    private(set) lazy var composerAddFileContainerView = createComposerAddFileContainerView(title: NSLocalizedString("stream_input_type_add_file",
-                                                                                                                     comment: "Add a file"))
+    private(set) lazy var composerAddFileContainerView = createComposerAddFileContainerView(title: .localized(key: "stream_input_type_add_file"))
     
     /// A table view of messages.
     public private(set) lazy var tableView: TableView = {
@@ -307,7 +306,7 @@ extension ChatViewController {
         }
         
         if presenter.parentMessage != nil {
-            title = NSLocalizedString("stream_thread", comment: "Thread")
+            title = .localized(key: "stream_thread")
             updateTitleReplyCount()
             return
         }
@@ -320,7 +319,7 @@ extension ChatViewController {
     }
     
     private func updateTitleReplyCount() {
-        guard title == NSLocalizedString("stream_thread", comment: "Thread"),
+        guard title == .localized(key: "stream_thread"),
             let parentMessage = presenter?.parentMessage else {
             return
         }
@@ -330,8 +329,7 @@ extension ChatViewController {
             return
         }
        
-        let title = String(format: NSLocalizedString("stream_reply_count",
-                                                     comment: "%d reply/replies"),
+        let title = String(format: .localized(key: "stream_reply_count"),
                            parentMessage.replyCount)
         let button = UIBarButtonItem(title: title, style: .plain, target: nil, action: nil)
         button.tintColor = .chatGray

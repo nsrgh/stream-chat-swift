@@ -62,8 +62,7 @@ extension MessageTableViewCell {
     
     func update(replyCount: Int) {
         replyCountButton.isHidden = false
-        replyCountButton.setTitle(String(format: NSLocalizedString("stream_reply_count",
-                                                                   comment: "%d reply/replies"),
+        replyCountButton.setTitle(String(format: .localized(key: "stream_reply_count"),
                                          replyCount),
                                   for: .normal)
         replyCountButton.setNeedsLayout()

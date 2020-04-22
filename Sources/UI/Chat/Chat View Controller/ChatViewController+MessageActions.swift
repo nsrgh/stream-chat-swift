@@ -61,8 +61,7 @@ extension ChatViewController {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         if messageActions.contains(.reactions), presenter.channel.config.reactionsEnabled {
-            alert.addAction(.init(title: NSLocalizedString("stream_message_action_reactions",
-                                                           comment: "Reactions"),
+            alert.addAction(.init(title: .localized(key: "stream_message_action_reactions"),
                                   style: .default,
                                   handler: { [weak self] _ in
                 self?.showReactions(from: cell, in: message, locationInView: locationInView)
@@ -70,8 +69,7 @@ extension ChatViewController {
         }
         
         if messageActions.contains(.reply), presenter.canReply {
-            alert.addAction(.init(title: NSLocalizedString("stream_message_action_reply",
-                                                           comment: "Reply"),
+            alert.addAction(.init(title: .localized(key: "stream_message_action_reply"),
                                   style: .default,
                                   handler: { [weak self] _ in
                 self?.showReplies(parentMessage: message)
@@ -79,8 +77,7 @@ extension ChatViewController {
         }
         
         if messageActions.contains(.edit), message.canEdit {
-            alert.addAction(.init(title: NSLocalizedString("stream_message_action_edit",
-                                                           comment: "Edit"),
+            alert.addAction(.init(title: .localized(key: "stream_message_action_edit"),
                                   style: .default,
                                   handler: { [weak self] _ in
                 self?.edit(message: message)
@@ -88,8 +85,7 @@ extension ChatViewController {
         }
         
         if messageActions.contains(.copy), let copyAction = copyAction(for: message) {
-            alert.addAction(.init(title: NSLocalizedString("stream_message_action_copy",
-                                                           comment: "Copy"),
+            alert.addAction(.init(title: .localized(key: "stream_message_action_copy"),
                                   style: .default,
                                   handler: { _ in copyAction() }))
         }
@@ -98,15 +94,13 @@ extension ChatViewController {
             // Mute.
             if messageActions.contains(.muteUser), presenter.channel.config.mutesEnabled {
                 if message.user.isMuted {
-                    alert.addAction(.init(title: NSLocalizedString("stream_message_action_unmute",
-                                                                   comment: "Unmute"),
+                    alert.addAction(.init(title: .localized(key: "stream_message_action_unmute"),
                                           style: .default,
                                           handler: { [weak self] _ in
                         self?.unmute(user: message.user)
                     }))
                 } else {
-                    alert.addAction(.init(title: NSLocalizedString("stream_message_action_mute",
-                                                                   comment: "Mute"),
+                    alert.addAction(.init(title: .localized(key: "stream_message_action_mute"),
                                           style: .default,
                                           handler: { [weak self] _ in
                         self?.mute(user: message.user)
@@ -118,15 +112,13 @@ extension ChatViewController {
                 // Flag a message.
                 if messageActions.contains(.flagMessage) {
                     if message.isFlagged {
-                        alert.addAction(.init(title: NSLocalizedString("stream_message_action_unflag",
-                                                                       comment: "Unflag the message"),
+                        alert.addAction(.init(title: .localized(key: "stream_message_action_unflag"),
                                               style: .default,
                                               handler: { [weak self] _ in
                             self?.unflag(message: message)
                         }))
                     } else {
-                        alert.addAction(.init(title: NSLocalizedString("stream_message_action_flag",
-                                                                       comment: "Flag the message"),
+                        alert.addAction(.init(title: .localized(key: "stream_message_action_flag"),
                                               style: .destructive,
                                               handler: { [weak self] _ in
                             self?.flag(message: message)
@@ -137,15 +129,13 @@ extension ChatViewController {
                 // Flag a user.
                 if messageActions.contains(.flagUser) {
                     if message.user.isFlagged {
-                        alert.addAction(.init(title: NSLocalizedString("stream_user_action_unflag",
-                                                                       comment: "Unflag the user"),
+                        alert.addAction(.init(title: .localized(key: "stream_user_action_unflag"),
                                               style: .default,
                                               handler: { [weak self] _ in
                             self?.unflag(user: message.user)
                         }))
                     } else {
-                        alert.addAction(.init(title: NSLocalizedString("stream_user_action_flag",
-                                                                       comment: "Flag the user"),
+                        alert.addAction(.init(title: .localized(key: "stream_user_action_flag"),
                                               style: .destructive,
                                               handler: { [weak self] _ in
                             self?.flag(user: message.user)
@@ -157,8 +147,7 @@ extension ChatViewController {
             if messageActions.contains(.banUser),
                 presenter.channel.banEnabling.isEnabled(for: presenter.channel),
                 !presenter.channel.isBanned(message.user) {
-                alert.addAction(.init(title: NSLocalizedString("stream_user_action_ban",
-                                                               comment: "Ban"),
+                alert.addAction(.init(title: .localized(key: "stream_user_action_ban"),
                                       style: .destructive,
                                       handler: { [weak self] _ in
                     if let channel = self?.presenter?.channel {
@@ -169,8 +158,7 @@ extension ChatViewController {
         }
         
         if messageActions.contains(.delete), message.canDelete {
-            alert.addAction(.init(title: NSLocalizedString("stream_action_delete",
-                                                           comment: "Delete"),
+            alert.addAction(.init(title: .localized(key: "stream_action_delete"),
                                   style: .destructive,
                                   handler: { [weak self] _ in
                 self?.conformDeleting(message: message)
@@ -181,8 +169,7 @@ extension ChatViewController {
             return nil
         }
         
-        alert.addAction(.init(title: NSLocalizedString("stream_action_cancel",
-                                                       comment: "Cancel"),
+        alert.addAction(.init(title: .localized(key: "stream_action_cancel"),
                               style: .cancel,
                               handler: { _ in }))
         
@@ -247,12 +234,11 @@ extension ChatViewController {
             text = message.text.count > 100 ? String(message.text.prefix(100)) + "..." : message.text
         }
         
-        let alert = UIAlertController(title: NSLocalizedString("stream_message_action_delete_confirm",
-                                                               comment: "Delete message?"),
+        let alert = UIAlertController(title: .localized(key: "stream_message_action_delete_confirm"),
                                       message: text,
                                       preferredStyle: .alert)
         
-        alert.addAction(.init(title: NSLocalizedString("stream_action_delete", comment: "Delete"),
+        alert.addAction(.init(title: .localized(key: "stream_action_delete"),
                               style: .destructive,
                               handler: { [weak self] _ in
             if let self = self {
@@ -260,7 +246,7 @@ extension ChatViewController {
             }
         }))
         
-        alert.addAction(.init(title: NSLocalizedString("stream_action_cancel", comment: "Cancel"),
+        alert.addAction(.init(title: .localized(key: "stream_action_cancel"),
                               style: .cancel,
                               handler: { _ in }))
         
@@ -273,8 +259,7 @@ extension ChatViewController {
             .subscribe(onNext: { [weak self] _ in
                 if let backgroundColor = self?.view.backgroundColor {
                     
-                    self?.showBanner(String(format: NSLocalizedString("stream_banner_message_muted",
-                                                                      comment: "%@ was muted"),
+                    self?.showBanner(String(format: .localized(key: "stream_banner_message_muted"),
                                             user.name),
                                      backgroundColor: backgroundColor)
                 }
@@ -287,8 +272,7 @@ extension ChatViewController {
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 if let backgroundColor = self?.view.backgroundColor {
-                    self?.showBanner(String(format: NSLocalizedString("stream_banner_message_unmuted",
-                                                                      comment: "%@ was unmuted"),
+                    self?.showBanner(String(format: .localized(key: "stream_banner_message_unmuted"),
                                             user.name),
                                      backgroundColor: backgroundColor)
                 }
@@ -302,8 +286,7 @@ extension ChatViewController {
             .subscribe(onNext: { [weak self] _ in
                 if let backgroundColor = self?.view.backgroundColor {
                     
-                    self?.showBanner(String(format: NSLocalizedString("stream_banner_message_flagged",
-                                                                      comment: "🚩 Flagged: %@"),
+                    self?.showBanner(String(format: .localized(key: "stream_banner_message_flagged"),
                                             message.textOrArgs),
                                      backgroundColor: backgroundColor)
                 }
@@ -316,8 +299,7 @@ extension ChatViewController {
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 if let backgroundColor = self?.view.backgroundColor {
-                    self?.showBanner(String(format: NSLocalizedString("stream_banner_message_unflagged",
-                                                                      comment: "🚩 Unlagged: %@"),
+                    self?.showBanner(String(format: .localized(key: "stream_banner_message_unflagged"),
                                             message.textOrArgs),
                                      backgroundColor: backgroundColor)
                 }
@@ -330,8 +312,7 @@ extension ChatViewController {
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 if let backgroundColor = self?.view.backgroundColor {
-                    self?.showBanner(String(format: NSLocalizedString("stream_banner_message_flagged",
-                                                                      comment: "🚩 Flagged: %@"),
+                    self?.showBanner(String(format: .localized(key: "stream_banner_message_flagged"),
                                             user.name),
                                      backgroundColor: backgroundColor)
                 }
@@ -344,8 +325,7 @@ extension ChatViewController {
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 if let backgroundColor = self?.view.backgroundColor {
-                    self?.showBanner(String(format: NSLocalizedString("stream_banner_message_unflagged",
-                                                                      comment: "🚩 Unlagged: %@"),
+                    self?.showBanner(String(format: .localized(key: "stream_banner_message_unflagged"),
                                             user.name),
                                      backgroundColor: backgroundColor)
                 }
@@ -358,8 +338,7 @@ extension ChatViewController {
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 if let backgroundColor = self?.view.backgroundColor {
-                    self?.showBanner(String(format: NSLocalizedString("stream_banner_message_banned",
-                                                                      comment: "🙅‍♀️ Ban: %@"),
+                    self?.showBanner(String(format: .localized(key: "stream_banner_message_banned"),
                                             user.name), backgroundColor: backgroundColor)
                 }
             })
@@ -402,32 +381,28 @@ extension ChatViewController {
         var actions = [UIAction]()
         
         if messageActions.contains(.reactions), presenter.channel.config.reactionsEnabled {
-            actions.append(UIAction(title: NSLocalizedString("stream_message_action_reactions",
-                                                           comment: "Reactions"),
+            actions.append(UIAction(title: .localized(key: "stream_message_action_reactions"),
                                     image: UIImage(systemName: "smiley")) { [weak self] _ in
                 self?.showReactions(from: cell, in: message, locationInView: locationInView)
             })
         }
         
         if messageActions.contains(.reply), presenter.canReply {
-            actions.append(UIAction(title: NSLocalizedString("stream_message_action_reply",
-                                                           comment: "Reply"),
+            actions.append(UIAction(title: .localized(key: "stream_message_action_reply"),
                                     image: UIImage(systemName: "arrowshape.turn.up.left")) { [weak self] _ in
                 self?.showReplies(parentMessage: message)
             })
         }
         
         if messageActions.contains(.edit), message.canEdit {
-            actions.append(UIAction(title: NSLocalizedString("stream_message_action_edit",
-                                                           comment: "Edit"),
+            actions.append(UIAction(title: .localized(key: "stream_message_action_edit"),
                                     image: UIImage(systemName: "pencil")) { [weak self] _ in
                 self?.edit(message: message)
             })
         }
         
         if messageActions.contains(.copy), let copyAction = copyAction(for: message) {
-            actions.append(UIAction(title: NSLocalizedString("stream_message_action_copy",
-                                                           comment: "Copy"),
+            actions.append(UIAction(title: .localized(key: "stream_message_action_copy"),
                                     image: UIImage(systemName: "doc.on.doc")) { _ in copyAction() })
         }
         
@@ -435,14 +410,12 @@ extension ChatViewController {
             // Mute.
             if messageActions.contains(.muteUser), presenter.channel.config.mutesEnabled {
                 if message.user.isMuted {
-                    actions.append(UIAction(title: NSLocalizedString("stream_message_action_unmute",
-                                                                   comment: "Unmute"),
+                    actions.append(UIAction(title: .localized(key: "stream_message_action_unmute"),
                                             image: UIImage(systemName: "speaker")) { [weak self] _ in
                         self?.unmute(user: message.user)
                     })
                 } else {
-                    actions.append(UIAction(title: NSLocalizedString("stream_message_action_mute",
-                                                                   comment: "Mute"),
+                    actions.append(UIAction(title: .localized(key: "stream_message_action_mute"),
                                             image: UIImage(systemName: "speaker.slash")) { [weak self] _ in
                         self?.mute(user: message.user)
                     })
@@ -453,14 +426,12 @@ extension ChatViewController {
                 // Flag a message.
                 if messageActions.contains(.flagMessage) {
                     if message.isFlagged {
-                        actions.append(UIAction(title: NSLocalizedString("stream_message_action_unflag",
-                                                                         comment: "Unflag the message"),
+                        actions.append(UIAction(title: .localized(key: "stream_message_action_unflag"),
                                                 image: UIImage(systemName: "flag.slash")) { [weak self] _ in
                                                     self?.unflag(message: message)
                         })
                     } else {
-                        actions.append(UIAction(title: NSLocalizedString("stream_message_action_flag",
-                                                                         comment: "Flag the message"),
+                        actions.append(UIAction(title: .localized(key: "stream_message_action_flag"),
                                                 image: UIImage(systemName: "flag"),
                                                 attributes: [.destructive]) { [weak self] _ in
                                                     self?.flag(message: message)
@@ -471,14 +442,12 @@ extension ChatViewController {
                 // Flag a user.
                 if messageActions.contains(.flagUser) {
                     if message.user.isFlagged {
-                        actions.append(UIAction(title: NSLocalizedString("stream_user_action_unflag",
-                                                                         comment: "Unflag the user"),
+                        actions.append(UIAction(title: .localized(key: "stream_user_action_unflag"),
                                                 image: UIImage(systemName: "hand.raised.slash")) { [weak self] _ in
                                                     self?.unflag(user: message.user)
                         })
                     } else {
-                        actions.append(UIAction(title: NSLocalizedString("stream_user_action_flag",
-                                                                         comment: "Flag the user"),
+                        actions.append(UIAction(title: .localized(key: "stream_user_action_flag"),
                                                 image: UIImage(systemName: "hand.raised"),
                                                 attributes: [.destructive]) { [weak self] _ in
                                                     self?.flag(user: message.user)
@@ -490,8 +459,7 @@ extension ChatViewController {
             if messageActions.contains(.banUser),
                 presenter.channel.banEnabling.isEnabled(for: presenter.channel),
                 !presenter.channel.isBanned(message.user) {
-                actions.append(UIAction(title: NSLocalizedString("stream_user_action_ban",
-                                                                 comment: "Ban"),
+                actions.append(UIAction(title: .localized(key: "stream_user_action_ban"),
                                         image: UIImage(systemName: "exclamationmark.octagon"),
                                         attributes: [.destructive]) { [weak self] _ in
                                             if let channel = self?.presenter?.channel {
@@ -502,8 +470,7 @@ extension ChatViewController {
         }
         
         if messageActions.contains(.delete), message.canDelete {
-            actions.append(UIAction(title: NSLocalizedString("stream_action_delete",
-                                                             comment: "Delete"),
+            actions.append(UIAction(title: .localized(key: "stream_action_delete"),
                                     image: UIImage(systemName: "trash"),
                                     attributes: [.destructive]) { [weak self] _ in
                                         self?.conformDeleting(message: message)
