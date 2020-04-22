@@ -1,6 +1,6 @@
 "stream_today" = "Today";
 "stream_yesterday" = "Yesterday";
-"stream_message_date" = "%1$s %2$s";
+"stream_message_date" = "%1$@ %2$@";
 "stream_thread_separator" = "Start of a new thread";
 "stream_typing_status_one" = "%@ is typing...";
 "stream_typing_status_two" = "%1$@ and %2$@ are typing...";
