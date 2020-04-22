@@ -1,7 +1,7 @@
 "stream_today" = "Heute";
 "stream_yesterday" = "Gestern";
-"stream_message_date" = "%1$@ %2$@";
 "stream_thread_separator" = "Starte neuen Thread";
 "stream_typing_status_one" = "%@ schreibt …";
 "stream_typing_status_two" = "%1$@ und %2$@ schreiben …";
 "stream_typing_status_many" = "%1$@ und %2$d weitere schreiben …";
+"stream_message_date_time" = "bei %@";

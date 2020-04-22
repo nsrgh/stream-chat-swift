@@ -102,7 +102,7 @@ extension ChannelPresenter {
                 yesterdayStatusAdded = true
                
                 items.insert(.status(PresenterItem.statusYesterdayTitle,
-                                     String(format: .localized(key: "stream_message_date"),
+                                     String(format: .localized(key: "stream_message_date_time"),
                                             DateFormatter.time.string(from: message.created)),
                     false), at: index)
                 index += 1
@@ -111,7 +111,7 @@ extension ChannelPresenter {
             if showStatuses, !todayStatusAdded, message.created.isToday {
                 todayStatusAdded = true
                 items.insert(.status(PresenterItem.statusTodayTitle,
-                                     String(format: .localized(key: "stream_message_date"),
+                                     String(format: .localized(key: "stream_message_date_time"),
                                             DateFormatter.time.string(from: message.created)),
                     false), at: index)
                 index += 1
