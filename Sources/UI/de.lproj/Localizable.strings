@@ -4,6 +4,10 @@
 "stream_delete_message" = "Nachricht wurde gelöscht.";
 "stream_channel_offlineText" = "Warte auf Netzwerk ...";
 "stream_large_size_file_error" = "Datei ist zu groß zum Hochladen. Maximale Dateigröße ist 20 MB.";
+"stream_input_library_permission" = "Foto-Bibliothek-Berechtigung";
+"stream_input_library_permission_notdetermined" = "Berechtigungen werden nicht festgelegt.";
+"stream_input_library_premission_denied" = "Sie haben dieser Anwendung ausdrücklich den Zugriff auf Fotodaten verweigert.";
+"stream_input_library_permission_restricted" = "Diese Anwendung ist nicht berechtigt, auf Fotodaten zuzugreifen.";
 "stream_permission_settings" = "Einstellungen";
 "stream_channel_delete_message" = "Nachricht wurde gelöscht";
 "stream_channel_no_messages" = "Keine Nachrichten";
