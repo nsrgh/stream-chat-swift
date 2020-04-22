@@ -38,8 +38,8 @@ enum ReachabilityError: Error {
     case unableToGetFlags(Int32)
 }
 
-public extension Notification.Name {
-    static let reachabilityChanged = Notification.Name("io.getstream.StreamChatClient.reachabilityChanged")
+extension Notification.Name {
+    public static let reachabilityChanged = Notification.Name("io.getstream.StreamChatClient.reachabilityChanged")
 }
 
 public class Reachability {
