@@ -15,7 +15,7 @@ extension String {
     static func localized(key: String) -> String {
         NSLocalizedString(key,
                           tableName: nil,
-                          bundle: ChatCoreModule.bundle,
+                          bundle: StreamLocalizationManager.shared.localizedBundle(from: ChatCoreModule.bundle),
                           value: "",
                           comment: "")
     }
