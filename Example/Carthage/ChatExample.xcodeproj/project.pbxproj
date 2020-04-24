@@ -364,11 +364,7 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-			);
-			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
@@ -381,8 +377,6 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"$(SRCROOT)/../../Carthage/Build/iOS/RxCocoa.framework",
 				"$(SRCROOT)/../../Carthage/Build/iOS/RxRelay.framework",
@@ -394,8 +388,6 @@
 				"$(SRCROOT)/../../Carthage/Build/iOS/RxGesture.framework",
 			);
 			name = Carthage;
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxCocoa.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxRelay.framework",
