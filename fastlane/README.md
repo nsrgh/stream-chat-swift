@@ -15,6 +15,11 @@ Install _fastlane_ using
 or alternatively using `brew cask install fastlane`
 
 # Available Actions
+### release
+```
+fastlane release
+```
+Release a new version
 ### match_me
 ```
 fastlane match_me
@@ -25,6 +30,41 @@ Installs all Certs and Profiles necessary for development and ad-hoc
 fastlane beta
 ```
 Builds the latest version with ad-hoc and uploads to firebase
+### carthage_bootstrap
+```
+fastlane carthage_bootstrap
+```
+Installs Carthage dependencies necessary for development (and building Carthage Example)
+### build_for_testing
+```
+fastlane build_for_testing
+```
+Builds the project for testing
+### test_without_building
+```
+fastlane test_without_building
+```
+Runs all the tests without building
+### test_integrations
+```
+fastlane test_integrations
+```
+Tests SDK integrations with Carthage, Cocoapods and SPM
+### test_carthage_integration
+```
+fastlane test_carthage_integration
+```
+Tests integration with Carthage by building Carthage Example
+### test_cocoapods_integration
+```
+fastlane test_cocoapods_integration
+```
+Tests integration with Cocoapods by building Cocoapods Example
+### test_spm_integration
+```
+fastlane test_spm_integration
+```
+Tests integration with SPM by building SPM Example
 
 ----
 

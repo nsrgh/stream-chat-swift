@@ -58,11 +58,40 @@ extension Client {
             
             if case .connected(let userConnection) = connectionState {
                 self.userAtomic.set(userConnection.user)
+                self.recoverConnection()
                 
                 if self.isExpiredTokenInProgress {
                     self.performInCallbackQueue { [unowned self] in self.sendWaitingRequests() }
                 }
+            } else if case .reconnecting = connectionState {
+                self.needsToRecoverConnection = true
             }
+        }
+    }
+    
+    private func recoverConnection() {
+        guard needsToRecoverConnection else {
+            return
+        }
+        
+        needsToRecoverConnection = false
+        restoreWatchingChannels()
+    }
+    
+    private func restoreWatchingChannels() {
+        watchingChannelsAtomic.flush()
+        
+        guard let keys = watchingChannelsAtomic.get()?.keys, !keys.isEmpty else {
+            return
+        }
+        
+        let cids = Array(keys).chunked(into: 50)
+        
+        cids.forEach { chunk in
+            queryChannels(filter: .in("cid", chunk),
+                          pagination: [.limit(1)],
+                          messagesLimit: [.limit(1)],
+                          options: .watch) { _ in }
         }
     }
 }

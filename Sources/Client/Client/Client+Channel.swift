@@ -78,14 +78,14 @@ public extension Client {
     /// - Parameters:
     ///   - channel: a channel.
     ///   - pagination: a pagination for messages (see `Pagination`).
-    ///   - options: a query options. All by default (see `QueryOptions`), e.g. `.watch`.
+    ///   - options: a query options. `.state` by default (see `QueryOptions`)
     ///   - completion: a completion block with `ChannelResponse`.
     @discardableResult
     func queryChannel(_ channel: Channel,
                       messagesPagination: Pagination = [],
                       membersPagination: Pagination = [],
                       watchersPagination: Pagination = [],
-                      options: QueryOptions = [],
+                      options: QueryOptions = .state,
                       _ completion: @escaping Client.Completion<ChannelResponse>) -> Cancellable {
         queryChannel(query: .init(channel: channel,
                                   messagesPagination: messagesPagination,
@@ -125,8 +125,10 @@ public extension Client {
     @discardableResult
     func watch(channel: Channel,
                options: QueryOptions = [],
-               _ completion: @escaping Client.Completion<ChannelResponse>) -> Cancellable {
-        queryChannel(channel, options: options.union(.watch), completion)
+               _ completion: @escaping Client.Completion<ChannelResponse> = { _ in }) -> Cancellable {
+        watchingChannelsAtomic.flush()
+        watchingChannelsAtomic.add(channel, key: channel.cid)
+        return queryChannel(channel, options: options.union(.watch), completion)
     }
     
     /// Stop watching the channel for a state changes.

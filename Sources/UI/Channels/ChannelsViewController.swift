@@ -38,7 +38,7 @@ open class ChannelsViewController: ViewController {
         didSet {
             reset()
             
-            if isVisible {
+            if viewIfLoaded != nil {
                 setupChannelsPresenter()
             }
         }
@@ -113,7 +113,9 @@ open class ChannelsViewController: ViewController {
         }
     }
     
-    private func setupChannelsPresenter() {
+    /// Setup the channels presenter for changes.
+    /// It will be called when the view controller will be visible or when the presenter was changed.
+    open func setupChannelsPresenter() {
         presenter.stopChannelsWatchingIfNeeded = stopChannelsWatchingIfNeeded
         
         presenter.rx.changes
@@ -173,10 +175,7 @@ open class ChannelsViewController: ViewController {
     open func updateChannelCell(_ cell: ChannelTableViewCell, channelPresenter: ChannelPresenter) {
         cell.setupIfNeeded(style: style.channel)
         cell.nameLabel.text = channelPresenter.channel.name
-        
-        cell.avatarView.update(with: channelPresenter.channel.imageURL,
-                               name: channelPresenter.channel.name,
-                               baseColor: style.channel.backgroundColor)
+        updateChannelCellAvatarView(in: cell, channel: channelPresenter.channel)
         
         if let lastMessage = channelPresenter.lastMessage {
             var text = lastMessage.isDeleted
@@ -197,6 +196,14 @@ open class ChannelsViewController: ViewController {
                         isMeta: true,
                         isUnread: false)
         }
+    }
+    
+    /// Updates channel avatar view with the given channel.
+    /// - Parameters:
+    ///   - cell: a channel cell.
+    ///   - channel: a channel.
+    open func updateChannelCellAvatarView(in cell: ChannelTableViewCell, channel: Channel) {
+        cell.avatarView.update(with: channel.imageURL, name: channel.name)
     }
     
     // MARK: - Loading Cell

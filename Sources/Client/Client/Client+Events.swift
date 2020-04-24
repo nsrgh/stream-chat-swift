@@ -58,7 +58,7 @@ public final class SubscriptionBag: Cancellable {
     /// - Returns: this subscription bag.
     @discardableResult
     public func adding(_ subscription: Cancellable) -> Self {
-        subscriptions.append(subscription)
+        add(subscription)
         return self
     }
     
