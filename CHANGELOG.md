@@ -19,12 +19,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### ✅ Added
 - Message preparation callback on `ChannelPresenter` to modify messages before they're sent [#142](https://github.com/GetStream/stream-chat-swift/issues/142).
+- The view controller for threads can now be customized by overriding `createThreadViewController` in `ChatViewController`. This is useful if you need a different style for threads. [#136](https://github.com/GetStream/stream-chat-swift/issues/136).
 - Better errors when developers forget to call `set(user:)` or don't wait for its completion [#160](https://github.com/GetStream/stream-chat-swift/issues/160).
 - Examples for a channel unread count and watcher count in the Example app [#172](https://github.com/GetStream/stream-chat-swift/issues/172).
 - Added `ChatViewStyle.default` [#191](https://github.com/GetStream/stream-chat-swift/issues/191). 
 - Added `ChatViewStyle.dynamic` for iOS 13 to support dynamic colors for dark mode [#191](https://github.com/GetStream/stream-chat-swift/issues/191). 
 - Added `MessageViewStyle.pointedCornerRadius` to make pointed corner rounded [#191](https://github.com/GetStream/stream-chat-swift/issues/191). 
 - Added methods for `AvatarView` customization [#203](https://github.com/GetStream/stream-chat-swift/issues/203):
+- Added `messageInsetSpacing` to `MessageViewStyle` to allow control of spacing between message and container
+   [#216](https://github.com/GetStream/stream-chat-swift/pull/216).
 
 `ChannelsViewController`:
 ```swift
