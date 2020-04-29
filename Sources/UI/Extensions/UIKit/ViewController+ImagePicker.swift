@@ -10,11 +10,17 @@ import UIKit
 import Photos.PHPhotoLibrary
 
 extension ViewController {
-    typealias ImagePickerCompletion = (_ imagePickedInfo: PickedImage?, _ authorizationStatus: PHAuthorizationStatus) -> Void
+    enum ImagePickerError: Error {
+        case invalidStatus(PHAuthorizationStatus)
+        case sourceTypeNotSupported
+        case unknown
+    }
+    
+    typealias ImagePickerCompletion = (Result<PickedImage, ImagePickerError>) -> Void
     
     func showImagePicker(sourceType: UIImagePickerController.SourceType, _ completion: @escaping ImagePickerCompletion) {
-        if UIImagePickerController.isSourceTypeAvailable(sourceType) {
-            showAuthorizeImagePicker(sourceType: sourceType, completion)
+        guard UIImagePickerController.isSourceTypeAvailable(sourceType) else {
+            completion(.failure(.sourceTypeNotSupported))
             return
         }
         
@@ -25,24 +31,24 @@ extension ViewController {
             PHPhotoLibrary.requestAuthorization { [weak self] status in
                 DispatchQueue.main.async {
                     if status == .authorized {
-                        self?.showAuthorizeImagePicker(sourceType: sourceType, completion)
+                        self?.showAuthorizedImagePicker(sourceType: sourceType, completion)
                     } else {
-                        completion(nil, status)
+                        completion(.failure(.invalidStatus(status)))
                     }
                 }
             }
         case .restricted, .denied:
-            completion(nil, status)
+            completion(.failure(.invalidStatus(status)))
         case .authorized:
-            showAuthorizeImagePicker(sourceType: sourceType, completion)
+            showAuthorizedImagePicker(sourceType: sourceType, completion)
         @unknown default:
             print(#file, #function, #line, "Unknown authorization status: \(status.rawValue)")
             return
         }
     }
     
-    private func showAuthorizeImagePicker(sourceType: UIImagePickerController.SourceType,
-                                          _ completion: @escaping ImagePickerCompletion) {
+    private func showAuthorizedImagePicker(sourceType: UIImagePickerController.SourceType,
+                                           _ completion: @escaping ImagePickerCompletion) {
         let delegateKey = String(ObjectIdentifier(self).hashValue) + "ImagePickerDelegate"
         let imagePickerViewController = UIImagePickerController()
         imagePickerViewController.sourceType = sourceType
@@ -53,7 +59,7 @@ extension ViewController {
         
         let delegate = ImagePickerDelegate(completion) {
             objc_setAssociatedObject(self, delegateKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            completion(nil, .notDetermined)
+            // Completion is not called when user cancels. This is intended
         }
         
         imagePickerViewController.delegate = delegate
@@ -71,32 +77,43 @@ extension ViewController {
         present(imagePickerViewController, animated: true)
     }
     
-    func showImagePickerAuthorizationStatusAlert(_ status: PHAuthorizationStatus) {
+    func showImagePickerAlert(for error: ImagePickerError) {
+        let title: String
         let message: String
+        var actions = [UIAlertAction(title: .localized(key: "stream_action_ok"),
+                                     style: .default,
+                                     handler: nil)]
         
-        switch status {
-        case .notDetermined:
+        switch error {
+        case .sourceTypeNotSupported:
+            title = .localized(key: "stream_input_library_permission")
             message = .localized(key: "stream_input_library_permission_notdetermined")
-        case .denied:
+        case .invalidStatus(let status):
+            title = .localized(key: "stream_input_library_permission")
+            actions.insert(UIAlertAction(title: .localized(key: "stream_permission_settings"),
+                                         style: .default,
+                                         handler: { _ in
+                                            if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
+                                                UIApplication.shared.open(settingsURL)
+                                            }}),
+                            at: 0)
+            
+            switch status {
+            case .notDetermined:
+                message = .localized(key: "stream_input_library_permission_notdetermined")
+            case .denied:
+                message = .localized(key: "stream_input_library_premission_denied")
+            case .restricted:
+                message = .localized(key: "stream_input_library_permission_restricted")
+            default:
+                return
+            }
+        case .unknown:
+            title = .localized(key: "stream_input_library_permission")
             message = .localized(key: "stream_input_library_premission_denied")
-        case .restricted:
-            message = .localized(key: "stream_input_library_permission_restricted")
-        default:
-            return
         }
         
-        showAlert(title: .localized(key: "stream_input_library_permission"),
-                  message: message,
-                  actions: [.init(title: .localized(key: "stream_permission_settings"),
-                                  style: .default,
-                                  handler: { _ in
-                                      if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
-                                          UIApplication.shared.open(settingsURL)
-                                      }
-                                  }),
-                            .init(title: .localized(key: "stream_action_ok"),
-                                  style: .default,
-                                  handler: nil)])
+        showAlert(title: title, message: message, actions: actions)
     }
 }
 
@@ -115,7 +132,12 @@ fileprivate final class ImagePickerDelegate: NSObject, UINavigationControllerDel
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         picker.dismiss(animated: true)
-        completion(PickedImage(info: info), .authorized)
+        
+        if let pickedImage = PickedImage(info: info) {
+            completion(.success(pickedImage))
+        } else {
+            completion(.failure(.unknown))
+        }
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
