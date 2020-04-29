@@ -411,11 +411,11 @@ extension ChatViewController {
         showCommands(show: false)
         
         composerAddFileContainerView.containerView.arrangedSubviews.forEach { subview in
-            if let addFileView = subview as? ComposerAddFileView {
+            if let addFileView = subview as? ComposerAddFileView, let uploadManager = composerView.uploadManager {
                 if case .file = addFileView.sourceType {
-                    addFileView.isHidden = !composerView.imageUploaderItems.isEmpty
+                    addFileView.isHidden = !uploadManager.images.isEmpty
                 } else {
-                    addFileView.isHidden = !composerView.isUploaderFilesEmpty
+                    addFileView.isHidden = !uploadManager.files.isEmpty
                 }
             }
         }
@@ -485,7 +485,7 @@ extension ChatViewController {
                                                                         pickedImage.isVideo,
                                                                         presenter.channel)
             
-            let uploaderItem = UploaderItem(channel: presenter.channel, pickedImage: pickedImage, extraData: extraData)
+            let uploaderItem = UploadingItem(channel: presenter.channel, pickedImage: pickedImage, extraData: extraData)
             self.composerView.addImageUploaderItem(uploaderItem)
         }
         
@@ -502,7 +502,7 @@ extension ChatViewController {
                 if let self = self, let presenter = self.presenter {
                     $0.forEach { url in
                         let extraData = presenter.fileAttachmentExtraDataCallback?(url, presenter.channel)
-                        let uploaderItem = UploaderItem(channel: presenter.channel, url: url, extraData: extraData)
+                        let uploaderItem = UploadingItem(channel: presenter.channel, url: url, extraData: extraData)
                         self.composerView.addFileUploaderItem(uploaderItem)
                     }
                 }
