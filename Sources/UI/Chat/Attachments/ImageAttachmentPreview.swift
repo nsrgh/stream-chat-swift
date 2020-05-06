@@ -146,7 +146,7 @@ final class ImageAttachmentPreview: UIView, AttachmentPreview {
         didSet {
             if let attachment = attachment {
                 hasActions = !attachment.actions.isEmpty
-                isLink = !attachment.isImage
+                isLink = attachment.url != nil
                 defaultHeight = attachment.isImage && !hasActions ? .attachmentPreviewHeight : .attachmentPreviewMaxHeight
             }
         }
