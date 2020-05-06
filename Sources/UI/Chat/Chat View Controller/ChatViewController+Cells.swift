@@ -184,7 +184,7 @@ extension ChatViewController {
     }
     
     private func show(attachment: Attachment, at index: Int, from attachments: [Attachment]) {
-        if attachment.isImage {
+        if attachment.isImage && attachment.url == nil {
             showMediaGallery(with: attachments.compactMap {
                 let logoImage = $0.type == .giphy ? UIImage.Logo.giphy : nil
                 return MediaGalleryItem(title: $0.title, url: $0.imageURL, logoImage: logoImage)
