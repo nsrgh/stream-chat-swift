@@ -169,7 +169,9 @@ extension ChatViewController {
             composerEditingContainerView.animate(show: false)
         }
         
-        composerView.styleState = .disabled
+        // We don't want users to send the same message multiple times
+        // in case their internet is slow and message isn't sent immediately
+        composerView.sendButton.isEnabled = false
         
         presenter?.rx.send(text: text)
             .subscribe(
@@ -465,35 +467,33 @@ extension ChatViewController {
             do {
                 let pickedImage = try result.get()
                 
-                guard let fileURL = pickedImage.fileURL else {
-                    ClientLogger.log("📁", "File URL cannot be determined for file named: \(pickedImage.fileName)")
-                    return
-                }
-                
-                let fileSizeResource = try fileURL.resourceValues(forKeys: [.fileSizeKey])
-                
-                if let fileSize = fileSizeResource.fileSize,
-                   fileSize >= 20 * 1_048_576 { // 20 MB Upload limit
-                    self.show(errorMessage: .localized(key: "stream_large_size_file_error"))
-                    return
-                }
-                
                 guard let presenter = self.presenter, let image = pickedImage.image else {
                     return
                 }
                 
-                let extraData = presenter.imageAttachmentExtraDataCallback?(fileURL,
+                let extraData = presenter.imageAttachmentExtraDataCallback?(pickedImage.fileURL,
                                                                             image,
                                                                             pickedImage.isVideo,
                                                                             presenter.channel)
                 
-                let uploaderItem = UploadingItem(channel: presenter.channel, pickedImage: pickedImage, extraData: extraData)
-                self.composerView.addImageUploaderItem(uploaderItem)
+                let uploaderItem = try UploadingItem(channel: presenter.channel, pickedImage: pickedImage, extraData: extraData)
+                
+                guard let data = uploaderItem.data, data.count < 20 * 1024 * 1024 else {
+                    self.show(errorMessage: .localized(key: "stream_large_size_file_error"))
+                    return
+                }
+                
+                if case .image = uploaderItem.type {
+                    self.composerView.addImageUploaderItem(uploaderItem)
+                } else {
+                    self.composerView.addFileUploaderItem(uploaderItem)
+                }
             } catch let error as ImagePickerError {
                 self.showImagePickerAlert(for: error)
+            } catch let error as ClientError {
+                ClientLogger.log("🌄", "Error when trying to create file for uploading: \(error)")
             } catch {
-                ClientLogger.log("📁", "Error occurred when trying to get file size: \(error)")
-
+                ClientLogger.log("🌄", "Unknown error: \(error)")
             }
         }
         
@@ -509,9 +509,19 @@ extension ChatViewController {
             .subscribe(onNext: { [weak self] in
                 if let self = self, let presenter = self.presenter {
                     $0.forEach { url in
-                        let extraData = presenter.fileAttachmentExtraDataCallback?(url, presenter.channel)
-                        let uploaderItem = UploadingItem(channel: presenter.channel, url: url, extraData: extraData)
-                        self.composerView.addFileUploaderItem(uploaderItem)
+                        do {
+                            let extraData = presenter.fileAttachmentExtraDataCallback?(url, presenter.channel)
+                            let uploaderItem = try UploadingItem(channel: presenter.channel, url: url, extraData: extraData)
+                            
+                            guard let data = uploaderItem.data, data.count < 20 * 1024 * 1024 else {
+                                self.show(errorMessage: "File size exceeds limit of 20MB")
+                                return
+                            }
+                            
+                            self.composerView.addFileUploaderItem(uploaderItem)
+                        } catch {
+                            ClientLogger.log("📁", "Error occurred when trying to add file in url: \(url), error: \(error)")
+                        }
                     }
                 }
             })
