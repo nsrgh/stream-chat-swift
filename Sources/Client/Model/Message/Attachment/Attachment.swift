@@ -158,7 +158,7 @@ public struct Attachment: Codable {
     }
     
     private static func fixedURL(_ urlString: String?) -> URL? {
-        guard let string = urlString?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
+        guard let string = urlString else {
             return nil
         }
         
@@ -172,7 +172,13 @@ public struct Attachment: Codable {
             urlString = "https://\(urlString)"
         }
         
-        return URL(string: urlString)
+        if let url = URL(string: urlString) {
+            return url
+        } else if let encodedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) {
+            return URL(string: encodedString)
+        }
+        
+        return nil
     }
 }
 
