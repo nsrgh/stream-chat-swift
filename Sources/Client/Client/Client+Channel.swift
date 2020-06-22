@@ -18,11 +18,13 @@ public extension Client {
     ///   - id: a channel id.
     ///   - members: a list of members.
     ///   - invitedMembers: a list of invited members.
+    ///   - team: The team the channel belongs to.
     ///   - extraData: a channel extra data.
     func channel(type: ChannelType,
                  id: String,
                  members: [User] = [],
                  invitedMembers: [User] = [],
+                 team: String = "",
                  extraData: ChannelExtraDataCodable? = nil) -> Channel {
         Channel(type: type,
                 id: id,
@@ -34,6 +36,7 @@ public extension Client {
                 createdBy: nil,
                 lastMessageDate: nil,
                 frozen: false,
+                team: team,
                 config: .init())
     }
     
@@ -42,21 +45,33 @@ public extension Client {
     /// - Parameters:
     ///   - type: a channel type.
     ///   - members: a list of members.
+    ///   - team: The team the channel belongs to.
     ///   - extraData: a channel extra data.
+    ///   - namingStrategy: a naming strategy to generate a name and image for the channel based on members.
+    ///                     Only takes effect if `extraData` is `nil`.
     func channel(type: ChannelType = .messaging,
                  members: [User],
-                 extraData: ChannelExtraDataCodable? = nil) -> Channel {
-        Channel(type: type,
-                id: "",
-                members: members,
-                invitedMembers: [],
-                extraData: extraData,
-                created: .init(),
-                deleted: nil,
-                createdBy: nil,
-                lastMessageDate: nil,
-                frozen: false,
-                config: .init())
+                 team: String = "",
+                 extraData: ChannelExtraDataCodable? = nil,
+                 namingStrategy: ChannelNamingStrategy? = Channel.DefaultNamingStrategy(maxUserNames: 1)) -> Channel {
+        var extraData = extraData
+        
+        if extraData == nil, let namingStrategy = namingStrategy {
+            extraData = namingStrategy.extraData(for: user, members: members)
+        }
+        
+        return Channel(type: type,
+                       id: "",
+                       members: members,
+                       invitedMembers: [],
+                       extraData: extraData,
+                       created: .init(),
+                       deleted: nil,
+                       createdBy: nil,
+                       lastMessageDate: nil,
+                       frozen: false,
+                       team: team,
+                       config: .init())
     }
 }
 
@@ -252,7 +267,12 @@ public extension Client {
         }
         
         message.mentionedUsers = mentionedUsers
-        return request(endpoint: .sendMessage(message, channel), completion)
+        
+        let completionWithStopTypingEvent = doBefore(completion) { [weak channel] _ in
+            channel?.stopTyping({ _ in })
+        }
+        
+        return request(endpoint: .sendMessage(message, channel), completionWithStopTypingEvent)
     }
     
     /// Send a message action for a given ephemeral message.
@@ -293,7 +313,11 @@ public extension Client {
     ///   - completion: a completion block with `Event`.
     @discardableResult
     func send(eventType: EventType, to channel: Channel, _ completion: @escaping Client.Completion<Event>) -> Cancellable {
-        request(endpoint: .sendEvent(eventType, channel)) { [unowned self] (result: Result<EventResponse, ClientError>) in
+        #if DEBUG
+        outgoingEventsTestLogger?(eventType)
+        #endif
+        
+        return request(endpoint: .sendEvent(eventType, channel)) { [unowned self] (result: Result<EventResponse, ClientError>) in
             self.logger?.log("🎫 \(eventType.rawValue)")
             completion(result.map(to: \.event))
         }

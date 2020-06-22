@@ -18,6 +18,10 @@ public final class Channel: Codable {
         case cid
         /// A type.
         case type
+        /// A channel name.
+        case name
+        /// An image URL.
+        case imageURL = "image"
         /// A last message date.
         case lastMessageDate = "last_message_at"
         /// A user created by.
@@ -30,12 +34,10 @@ public final class Channel: Codable {
         case config
         /// A frozen flag.
         case frozen
-        /// A name.
-        case name
-        /// A image URL.
-        case imageURL = "image"
         /// Members.
         case members
+        /// The team the channel belongs to.
+        case team
     }
     
     /// Coding keys for the encoding.
@@ -44,6 +46,7 @@ public final class Channel: Codable {
         case imageURL = "image"
         case members
         case invites
+        case team
     }
     
     /// A custom extra data type for channels.
@@ -74,6 +77,9 @@ public final class Channel: Codable {
     public internal(set) var watchers = Set<User>()
     /// A list of users to invite in the channel.
     let invitedMembers: Set<Member>
+    /// The team the channel belongs to. You need to enable multi-tenancy if you want to use this, else it'll be nil.
+    /// Refer to [docs](https://getstream.io/chat/docs/multi_tenant_chat/?language=swift) for more info.
+    public let team: String
     /// An extra data for the channel.
     public var extraData: ChannelExtraDataCodable?
     /// Check if the channel was deleted.
@@ -81,7 +87,7 @@ public final class Channel: Codable {
     /// Checks if read events evalable for the current user.
     public var readEventsEnabled: Bool { config.readEventsEnabled && members.contains(Member.current) }
     /// Returns the current unread count.
-    public var unreadCount: ChannelUnreadCount { unreadCountAtomic.get(default: .noUnread) }
+    public var unreadCount: ChannelUnreadCount { unreadCountAtomic.get() }
     
     private(set) lazy var unreadCountAtomic = Atomic<ChannelUnreadCount>(.noUnread, callbackQueue: .main) { [weak self] _, _ in
         if let self = self {
@@ -90,7 +96,7 @@ public final class Channel: Codable {
     }
     
     /// Online watchers in the channel.
-    public var watcherCount: Int { watcherCountAtomic.get(default: 0) }
+    public var watcherCount: Int { watcherCountAtomic.get() }
     
     private(set) lazy var watcherCountAtomic = Atomic(0, callbackQueue: .main) { [weak self] _, _ in
         if let self = self {
@@ -98,7 +104,7 @@ public final class Channel: Codable {
         }
     }
     
-    let unreadMessageReadAtomic = Atomic<MessageRead>()
+    let unreadMessageReadAtomic = Atomic<MessageRead?>(nil)
     /// Unread message state for the current user.
     public var unreadMessageRead: MessageRead? { unreadMessageReadAtomic.get() }
     /// Checks if the current status of the channel is unread.
@@ -117,8 +123,14 @@ public final class Channel: Codable {
     
     private var subscriptionBag = SubscriptionBag()
     
+    let currentUserTypingLastDateAtomic = Atomic<Date?>()
+    let currentUserTypingTimerControlAtomic = Atomic<TimerControl?>()
+    
     /// Checks for the channel data encoding is empty.
-    var isEmpty: Bool { extraData == nil && members.isEmpty && invitedMembers.isEmpty }
+    var isEmpty: Bool { extraData == nil && members.isEmpty && invitedMembers.isEmpty && team.isBlank }
+    
+    /// Returns the current timestamp. Can be replaced in tests with mock time, if needed.
+    var currentTime: () -> Date = { Date() }
     
     public init(type: ChannelType,
                 id: String,
@@ -130,6 +142,7 @@ public final class Channel: Codable {
                 createdBy: User?,
                 lastMessageDate: Date?,
                 frozen: Bool,
+                team: String = "",
                 config: Config) {
         self.type = type
         self.id = id
@@ -142,6 +155,7 @@ public final class Channel: Codable {
         self.createdBy = createdBy
         self.lastMessageDate = lastMessageDate
         self.frozen = frozen
+        self.team = team
         self.config = config
         didLoad = false
     }
@@ -155,7 +169,6 @@ public final class Channel: Codable {
         let members = try container.decodeIfPresent([Member].self, forKey: .members) ?? []
         self.members = Set<Member>(members)
         invitedMembers = Set<Member>()
-        extraData = try? Self.extraDataType.init(from: decoder) // swiftlint:disable:this explicit_init
         let config = try container.decode(Config.self, forKey: .config)
         self.config = config
         created = try container.decodeIfPresent(Date.self, forKey: .created) ?? config.created
@@ -163,7 +176,32 @@ public final class Channel: Codable {
         createdBy = try container.decodeIfPresent(User.self, forKey: .createdBy)
         lastMessageDate = try container.decodeIfPresent(Date.self, forKey: .lastMessageDate)
         frozen = try container.decode(Bool.self, forKey: .frozen)
+        team = try container.decodeIfPresent(String.self, forKey: .team) ?? ""
         didLoad = true
+        extraData = Channel.decodeChannelExtraData(from: decoder)
+    }
+    
+    /// Safely decode channel extra data and if it fail try to decode only default properties: name, imageURL.
+    private static func decodeChannelExtraData(from decoder: Decoder) -> ChannelExtraDataCodable? {
+        do {
+            var extraData = try Self.extraDataType.init(from: decoder) // swiftlint:disable:this explicit_init
+            extraData.imageURL = extraData.imageURL?.removingRandomSVG()
+            return extraData
+            
+        } catch {
+            ClientLogger.log("🐴❌", level: .error, "Channel extra data decoding error: \(error). "
+                + "Trying to recover by only decoding name and imageURL")
+            
+            guard let container = try? decoder.container(keyedBy: DecodingKeys.self) else {
+                return nil
+            }
+            
+            // Recovering the default channel extra data properties: name, imageURL.
+            var extraData = ChannelExtraData()
+            extraData.name = try? container.decodeIfPresent(String.self, forKey: .name)
+            extraData.imageURL = try? container.decodeIfPresent(URL.self, forKey: .imageURL)?.removingRandomSVG()
+            return extraData
+        }
     }
     
     deinit {
@@ -173,6 +211,8 @@ public final class Channel: Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: EncodingKeys.self)
         extraData?.encodeSafely(to: encoder, logMessage: "📦 when encoding a channel extra data")
+      
+      try container.encode(team, forKey: .team)
         
         var allMembers = members
         
@@ -199,14 +239,12 @@ public final class Channel: Codable {
     }
 }
 
-extension Channel: Hashable, CustomStringConvertible {
+// MARK: - Equatable
+
+extension Channel: Equatable, CustomStringConvertible {
     
     public static func == (lhs: Channel, rhs: Channel) -> Bool {
         lhs.cid == rhs.cid
-    }
-    
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(cid)
     }
     
     public var description: String {
@@ -215,7 +253,7 @@ extension Channel: Hashable, CustomStringConvertible {
     }
 }
 
-// MARK: Subscriptions
+// MARK: - Subscriptions
 
 extension Channel {
     
@@ -252,7 +290,7 @@ extension Channel {
     }
 }
 
-// MARK: Channel Extra Data Codable
+// MARK: - Channel Extra Data Codable
 
 extension Channel {
     

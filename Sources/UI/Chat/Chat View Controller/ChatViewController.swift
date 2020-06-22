@@ -100,9 +100,11 @@ open class ChatViewController: ViewController, UITableViewDataSource, UITableVie
         return tableView
     }()
     
-    private lazy var bottomThreshold = (style.incomingMessage.avatarViewStyle?.size ?? CGFloat.messageAvatarSize)
+    private lazy var minMessageHeight = 2 * (style.incomingMessage.avatarViewStyle?.size ?? CGFloat.messageAvatarSize)
         + style.incomingMessage.edgeInsets.top
         + style.incomingMessage.edgeInsets.bottom
+    
+    private lazy var bottomThreshold = minMessageHeight
         + style.composer.height
         + style.composer.edgeInsets.top
         + style.composer.edgeInsets.bottom
@@ -289,7 +291,7 @@ open class ChatViewController: ViewController, UITableViewDataSource, UITableVie
     ///   - message: a message.
     ///   - locationInView: a tap location in the cell.
     open func showActions(from cell: UITableViewCell, for message: Message, locationInView: CGPoint) {
-        guard let alert = defaultActionSheet(from: cell, for: message, locationInView: locationInView) else {
+        guard !message.isDeleted, let alert = defaultActionSheet(from: cell, for: message, locationInView: locationInView) else {
             return
         }
         
@@ -305,7 +307,9 @@ open class ChatViewController: ViewController, UITableViewDataSource, UITableVie
     ///   - locationInView: a tap location in the cell.
     @available(iOS 13, *)
     open func createActionsContextMenu(from cell: UITableViewCell, for message: Message, locationInView: CGPoint) -> UIMenu? {
-        defaultActionsContextMenu(from: cell, for: message, locationInView: locationInView)
+        guard !message.isDeleted else { return nil }
+        
+        return defaultActionsContextMenu(from: cell, for: message, locationInView: locationInView)
     }
     
     /// Creates a chat view controller for the message being replied to.
@@ -347,8 +351,7 @@ extension ChatViewController {
         title = presenter.channel.name
         let channelAvatar = AvatarView(style: style.avatarViewStyle)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: channelAvatar)
-        let imageURL = presenter.parentMessage == nil ? presenter.channel.imageURL : presenter.parentMessage?.user.avatarURL
-        channelAvatar.update(with: imageURL, name: title)
+        channelAvatar.update(with: presenter.channel.imageURL, name: title)
     }
     
     private func updateTitleReplyCount() {
@@ -375,12 +378,11 @@ extension ChatViewController {
 
 extension ChatViewController {
     
-    private func updateTableView(with changes: ViewChanges) {
+    func updateTableView(with changes: ViewChanges) {
         switch changes {
         case .none, .itemMoved:
             return
         case let .reloaded(scrollToRow, items):
-            let needsToScroll = !items.isEmpty && ((scrollToRow == (items.count - 1)))
             var isLoading = false
             self.items = items
             
@@ -391,7 +393,7 @@ extension ChatViewController {
             
             tableView.reloadData()
             
-            if scrollToRow >= 0 && (isLoading || (scrollEnabled && needsToScroll)) {
+            if scrollToRow >= 0 && (isLoading || scrollEnabled) {
                 tableView.scrollToRowIfPossible(at: scrollToRow, animated: false)
             }
             
@@ -403,8 +405,31 @@ extension ChatViewController {
             
         case let .itemsAdded(rows, reloadRow, forceToScroll, items):
             self.items = items
-            let needsToScroll = tableView.bottomContentOffset < bottomThreshold
-            tableView.stayOnScrollOnce = scrollEnabled && needsToScroll && !forceToScroll
+            
+            // A possible effective content height.
+            var effectiveContentHeight = tableView.frame.height // by default force to scroll.
+            
+            // Evaluate the possible effective content height for a signle message.
+            if rows.count == 1 {
+                var minMessageHeight = self.minMessageHeight
+                
+                if case .message(let message, []) = items[rows[0]] {
+                    if message.attachments.count > 1 {
+                        minMessageHeight = tableView.frame.height // always scroll for multiple attachments.
+                    } else if message.attachments.count == 1 {
+                        minMessageHeight += .attachmentPreviewMaxHeight
+                    } else if message.text.count > 60 {
+                        minMessageHeight = tableView.frame.height // always scroll for a "large" text (~> 2 lines).
+                    }
+                }
+                
+                effectiveContentHeight = tableView.contentSize.height
+                    + tableView.adjustedContentInset.top
+                    + tableView.adjustedContentInset.bottom
+                    + minMessageHeight
+            }
+            
+            let needsToScroll = forceToScroll || (scrollEnabled && (effectiveContentHeight >= tableView.frame.height))
             
             if forceToScroll {
                 reactionsView?.dismiss()
@@ -419,7 +444,7 @@ extension ChatViewController {
                     }
                 })
                 
-                if let maxRow = rows.max(), (scrollEnabled && needsToScroll) || forceToScroll {
+                if let maxRow = rows.max(), needsToScroll {
                     tableView.scrollToRowIfPossible(at: maxRow, animated: false)
                 }
             }

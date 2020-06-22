@@ -7,12 +7,10 @@
 //
 
 import Foundation
-import Starscream
 
 extension Client {
     
-    func setupWebSocket(user: User, token: Token) throws -> WebSocket {
-        let logger = logOptions.logger(icon: "🦄", for: [.webSocketError, .webSocket, .webSocketInfo])
+    func makeWebSocketRequest(user: User, token: Token) throws -> URLRequest {
         let jsonParameter = WebSocketPayload(user: user, token: token)
         
         var urlComponents = URLComponents()
@@ -43,30 +41,7 @@ extension Client {
         
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = authHeaders(token: token)
-        
-        return WebSocket(request, stayConnectedInBackground: stayConnectedInBackground, logger: logger) { [unowned self] event in
-            guard case .connectionChanged(let connectionState) = event else {
-                if case .notificationMutesUpdated(let user, _, _) = event {
-                    self.userAtomic.set(user)
-                    return
-                }
-                
-                self.updateUserUnreadCount(event: event) // User unread counts should be updated before channels unread counts.
-                self.updateChannelsForWatcherAndUnreadCount(event: event)
-                return
-            }
-            
-            if case .connected(let userConnection) = connectionState {
-                self.userAtomic.set(userConnection.user)
-                self.recoverConnection()
-                
-                if self.isExpiredTokenInProgress {
-                    self.performInCallbackQueue { [unowned self] in self.sendWaitingRequests() }
-                }
-            } else if case .reconnecting = connectionState {
-                self.needsToRecoverConnection = true
-            }
-        }
+        return request
     }
     
     private func recoverConnection() {
@@ -81,7 +56,8 @@ extension Client {
     private func restoreWatchingChannels() {
         watchingChannelsAtomic.flush()
         
-        guard let keys = watchingChannelsAtomic.get()?.keys, !keys.isEmpty else {
+        let keys = watchingChannelsAtomic.get().keys
+        guard !keys.isEmpty else {
             return
         }
         
@@ -93,6 +69,54 @@ extension Client {
                           messagesLimit: [.limit(1)],
                           options: .watch) { _ in }
         }
+    }
+}
+
+extension Client: WebSocketEventDelegate {
+    func shouldPublishEvent(_ event: Event) -> Bool {
+        switch event {
+        case .connectionChanged(let connectionState):
+            if case .connected(let userConnection) = connectionState {
+                unreadCountAtomic.set(userConnection.user.unreadCount)
+                userAtomic.set(userConnection.user)
+                recoverConnection()
+                
+                if isExpiredTokenInProgress {
+                    performInCallbackQueue { [unowned self] in self.sendWaitingRequests() }
+                }
+            } else if case .reconnecting = connectionState {
+                needsToRecoverConnection = true
+            }
+            
+            return true
+            
+        case .notificationMutesUpdated(let user, _, _):
+            userAtomic.set(user)
+            return true
+            
+        case let .messageNew(message, _, _, _) where message.user != user && user.isMuted(user: message.user):
+            // FIXIT: This shouldn't be by default.
+            logger?.log("Skip a message (\(message.id)) from muted user (\(message.user.id)): \(message.textOrArgs)", level: .info)
+            return false
+            
+        case let .typingStart(user, _, _), let .typingStop(user, _, _):
+            if user != self.user, self.user.isMuted(user: user) {
+                logger?.log("Skip typing events from muted user (\(user.id))", level: .info)
+                return false
+            }
+            
+        default: break
+        }
+        
+        updateUserUnreadCount(event: event) // User unread counts should be updated before channels unread counts.
+        updateChannelsForWatcherAndUnreadCount(event: event)
+        
+        return true
+    }
+    
+    func shouldAutomaticallySendTypingStopEvent(for user: User) -> Bool {
+        // Don't clean up current user's typing events
+        self.user != user
     }
 }
 

@@ -13,6 +13,8 @@ public struct User: Codable {
     private enum CodingKeys: String, CodingKey {
         case id
         case role
+        case name
+        case avatarURL = "image"
         case isOnline = "online"
         case isBanned = "banned"
         case created = "created_at"
@@ -21,9 +23,10 @@ public struct User: Codable {
         case isInvisible = "invisible"
         case devices
         case mutedUsers = "mutes"
-        case messagesUnreadCount = "unread_count"
-        case channelsUnreadCount = "unread_channels"
+        case unreadMessagesCount = "unread_count"
+        case unreadChannelsCount = "unread_channels"
         case isAnonymous = "anon"
+        case teams
     }
     
     public enum Role: String, Codable {
@@ -42,13 +45,23 @@ public struct User: Codable {
     public static var extraDataType: UserExtraDataCodable.Type = UserExtraData.self
     
     /// An unkown user.
+    @available(*, deprecated, message: """
+    Unknown user is not used anymore. By default the current Client user is anonymous (you can check this with `isAnonymous`).
+    Anyway you can't connect without `set(user:token)` or `setGuestUser(...)` or `setAnonymousUser(...)`.
+    """)
     public static let unknown = User(id: "unknown_\(UUID().uuidString)")
     
     /// Checks if the user is unknown.
+    @available(*, deprecated, message: """
+    Unknown user is not used anymore. By default the current Client user is anonymous (you can check this with `isAnonymous`).
+    Anyway you can't connect without `set(user:token)` or `setGuestUser(...)` or `setAnonymousUser(...)`.
+    """)
     public var isUnknown: Bool { self == User.unknown }
     
     /// An anonymous user.
     public static let anonymous = User(id: UUID().uuidString, role: .anonymous)
+    /// Checks if the user is anonymous.
+    public var isAnonymous: Bool { role == .anonymous }
     
     static var flaggedUsers = Set<User>()
     
@@ -76,6 +89,9 @@ public struct User: Codable {
     public internal(set) var currentDevice: Device?
     /// Muted users.
     public internal(set) var mutedUsers: [MutedUser]
+    /// Teams the user belongs to. You need to enable multi-tenancy if you want to use this, else it'll be empty.
+    /// Refer to [docs](https://getstream.io/chat/docs/multi_tenant_chat/?language=swift) for more info.
+    public let teams: [String]
     /// Check if the user is the current user.
     public var isCurrent: Bool { self == Client.shared.user }
     /// The current user.
@@ -83,31 +99,26 @@ public struct User: Codable {
     /// Checks if the user can be muted.
     public var canBeMuted: Bool { !isCurrent }
     /// Checks if the user is muted.
-    public var isMuted: Bool { isCurrent ? false : Client.shared.user.mutedUsers.first(where: { $0.user == self }) != nil }
+    public var isMuted: Bool { isCurrent ? false : Client.shared.user.isMuted(user: self) }
     /// Returns the user as a member.
     public var asMember: Member { Member(self) }
     /// Checks if the user is flagged (locally).
     public var isFlagged: Bool { User.flaggedUsers.contains(self) }
     
-    public var isAnonymous: Bool {
-        if case .anonymous = role {
-            return true
-        }
-        
-        return false
-    }
+    let unreadCount: UnreadCount
     
     /// Init a user.
     /// - Parameters:
     ///   - id: a user id.
     ///   - role: a user role (see `User.Role`).
+    ///   - extraData: an extra data for the user.
     ///   - created: a created date. It will be updated form server.
     ///   - updated: a updated date. It will be updated form server.
     ///   - lastActiveDate: a last active date. It will be updated form server.
     ///   - isInvisible: makes user invisible.
     ///   - isBanned: it will be updated form server.
     ///   - mutedUsers: it will be updated form server.
-    ///   - extraData: an extra data for the user.
+    ///   - teams: The teams the user belongs to.
     public init(id: String,
                 role: Role = .user,
                 extraData: UserExtraDataCodable? = nil,
@@ -116,7 +127,8 @@ public struct User: Codable {
                 lastActiveDate: Date? = nil,
                 isInvisible: Bool = false,
                 isBanned: Bool = false,
-                mutedUsers: [MutedUser] = []) {
+                mutedUsers: [MutedUser] = [],
+                teams: [String] = []) {
         self.id = id
         self.role = role
         self.extraData = extraData
@@ -126,8 +138,16 @@ public struct User: Codable {
         self.isInvisible = isInvisible
         self.isBanned = isBanned
         self.mutedUsers = mutedUsers
+        self.teams = teams
         isOnline = false
+        unreadCount = .noUnread
         devices = []
+    }
+    
+    init(id: String, role: Role = .user, name: String, avatarURL: URL? = nil, extraData: UserExtraDataCodable? = nil) {
+        self.init(id: id, role: role, extraData: extraData)
+        self.name = name
+        self.avatarURL = avatarURL
     }
     
     public init(from decoder: Decoder) throws {
@@ -142,22 +162,34 @@ public struct User: Codable {
         isBanned = try container.decodeIfPresent(Bool.self, forKey: .isBanned) ?? false
         devices = try container.decodeIfPresent([Device].self, forKey: .devices) ?? []
         mutedUsers = try container.decodeIfPresent([MutedUser].self, forKey: .mutedUsers) ?? []
+        teams = try container.decodeIfPresent([String].self, forKey: .teams) ?? []
+        extraData = User.decodeUserExtraData(from: decoder)
         
-        if let extraData = try? Self.extraDataType.init(from: decoder) {// swiftlint:disable:this explicit_init
-            var extraData = extraData
+        let unreadChannelsCount = try container.decodeIfPresent(Int.self, forKey: .unreadChannelsCount) ?? 0
+        let unreadMessagesCount = try container.decodeIfPresent(Int.self, forKey: .unreadMessagesCount) ?? 0
+        unreadCount = UnreadCount(channels: unreadChannelsCount, messages: unreadMessagesCount)
+    }
+    
+    /// Safely decode user extra data and if it fail try to decode only default properties: name, avatarURL.
+    private static func decodeUserExtraData(from decoder: Decoder) -> UserExtraDataCodable? {
+        do {
+            var extraData = try Self.extraDataType.init(from: decoder) // swiftlint:disable:this explicit_init
+            extraData.avatarURL = extraData.avatarURL?.removingRandomSVG()
+            return extraData
             
-            if extraData.avatarURL?.absoluteString.contains("random_svg") ?? false {
-                extraData.avatarURL = nil
+        } catch {
+            ClientLogger.log("🐴❌", level: .error, "User extra data decoding error: \(error). "
+                + "Trying to recover by only decoding name and imageURL")
+            
+            guard let container = try? decoder.container(keyedBy: CodingKeys.self) else {
+                return nil
             }
             
-            self.extraData = extraData
-        }
-        
-        if id == Client.shared.user.id,
-            let channelsUnreadCount = try container.decodeIfPresent(Int.self, forKey: .channelsUnreadCount),
-            let messagesUnreadCount = try container.decodeIfPresent(Int.self, forKey: .messagesUnreadCount) {
-            let unreadCount = UnreadCount(channels: channelsUnreadCount, messages: messagesUnreadCount)
-            Client.shared.unreadCountAtomic.set(unreadCount)
+            // Recovering the default user extra data properties: name, avatarURL.
+            var extraData = UserExtraData()
+            extraData.name = try? container.decodeIfPresent(String.self, forKey: .name)
+            extraData.avatarURL = try? container.decodeIfPresent(URL.self, forKey: .avatarURL)?.removingRandomSVG()
+            return extraData
         }
     }
     
@@ -173,6 +205,10 @@ public struct User: Codable {
         if isAnonymous {
             try container.encode(true, forKey: .isAnonymous)
         }
+    }
+    
+    func isMuted(user: User) -> Bool {
+        mutedUsers.contains { $0.user == user }
     }
 }
 
