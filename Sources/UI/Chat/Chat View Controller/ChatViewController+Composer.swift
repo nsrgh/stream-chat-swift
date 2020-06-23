@@ -524,7 +524,7 @@ extension ChatViewController {
                             let uploaderItem = try UploadingItem(channel: presenter.channel, url: url, extraData: extraData)
                             
                             guard let data = uploaderItem.data, data.count < 20 * 1024 * 1024 else {
-                                self.show(errorMessage: "File size exceeds limit of 20MB")
+                                self.show(errorMessage: .localized(key: "stream_large_size_file_error"))
                                 return
                             }
                             
