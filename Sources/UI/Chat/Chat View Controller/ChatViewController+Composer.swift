@@ -364,17 +364,17 @@ extension ChatViewController {
             case .photo:
                 if UIImagePickerController.hasPermissionDescription(for: .savedPhotosAlbum),
                     UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
-                    addButtonToAddFileView(container,
-                                           icon: UIImage.Icons.images,
-                                           title: .localized(key: "stream_input_upload_media"),
-                                           sourceType: .photo(.savedPhotosAlbum)) { [weak self] in
-                                            self?.showImagePicker(composerAddFileViewSourceType: $0)
-                    }
-                    
-                    composerView.imagesAddAction = { [weak self] _ in
-                        self?.showImagePicker(composerAddFileViewSourceType: .photo(.savedPhotosAlbum))
-                    }
-                }
+                      addButtonToAddFileView(container,
+                                             icon: UIImage.Icons.images,
+                                             title: .localized(key: "stream_input_upload_media"),
+                                             sourceType: .photo(.savedPhotosAlbum)) { [weak self] in
+                                              self?.showImagePicker(composerAddFileViewSourceType: $0)
+                      }
+                      
+                      composerView.imagesAddAction = { [weak self] _ in
+                          self?.showImagePicker(composerAddFileViewSourceType: .photo(.savedPhotosAlbum))
+                      }
+                  }
             case .camera:
                 if UIImagePickerController.hasPermissionDescription(for: .camera),
                     UIImagePickerController.isSourceTypeAvailable(.camera) {

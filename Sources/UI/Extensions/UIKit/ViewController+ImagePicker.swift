@@ -53,8 +53,8 @@ extension ViewController {
         let imagePickerViewController = UIImagePickerController()
         imagePickerViewController.sourceType = sourceType
         
-        if sourceType != .camera || Bundle.main.hasInfoDescription(for: .microphone) {
-            imagePickerViewController.mediaTypes = UIImagePickerController.availableMediaTypes(for: sourceType) ?? [.imageFileType]
+        if sourceType != .camera {
+            imagePickerViewController.mediaTypes = [.imageFileType]
         }
         
         let delegate = ImagePickerDelegate(completion) {
