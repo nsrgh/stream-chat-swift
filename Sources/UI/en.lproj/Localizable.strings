@@ -1,6 +1,6 @@
 "stream_input_hint" = "Write a message";
 "stream_input_type_add_file" = "Add a file";
-"stream_input_upload_media" = "Upload a photo or video";
+"stream_input_upload_media" = "Upload a photo";
 "stream_input_take_picture" = "Upload from a camera";
 "stream_input_upload_file" = "Upload a file";
 "stream_delete_message" = "This message was deleted.";

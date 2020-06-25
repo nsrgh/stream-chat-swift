@@ -1,6 +1,6 @@
 "stream_input_hint" = "Eine Nachricht schreiben";
 "stream_input_type_add_file" = "Fügen Sie eine Datei hinzu";
-"stream_input_upload_media" = "Foto oder Video hochladen";
+"stream_input_upload_media" = "Foto hochladen";
 "stream_input_take_picture" = "Foto von Kamera hochladen";
 "stream_input_upload_file" = "Datei hochladen";
 "stream_delete_message" = "Nachricht wurde gelöscht.";
